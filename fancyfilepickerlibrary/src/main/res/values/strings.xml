@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FancyFilePickerLibrary</string>
+    <string name="title_activity_file_picker">文件选择器</string>
+    <string name="picker">选择</string>
+</resources>
