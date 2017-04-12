@@ -2,4 +2,11 @@
     <string name="app_name">FancyFilePickerLibrary</string>
     <string name="title_activity_file_picker">文件选择器</string>
     <string name="picker">选择</string>
+    <string name="item_file_name">文件名</string>
+    <string name="item_file_description_default">0 KB</string>
+    <string name="item_file_description_label"> KB</string>
+    <string name="item_folder_name">文件夹</string>
+    <string name="folder_empty">空的文件夹</string>
+    <string name="item_folder_description_default">0 项</string>
+    <string name="item_folder_description_label"> 项</string>
 </resources>
