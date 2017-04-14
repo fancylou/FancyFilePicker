@@ -9,8 +9,7 @@ properties.load(project.rootProject.file('local.properties').newDataInputStream(
 def projectName = properties.getProperty("project.name")
 def projectGroupId = properties.getProperty("project.groupId")
 def projectArtifactId = properties.getProperty("project.artifactId")
-def projectVersionName = android.defaultConfig.versionName
-def projectPackaging = properties.getProperty("project.packaging")
+def projectVersionName = properties.getProperty("project.version")
 def projectSiteUrl = properties.getProperty("project.siteUrl")
 def projectGitUrl = properties.getProperty("project.gitUrl")
 def projectDesc = properties.getProperty("project.desc")
@@ -31,11 +30,13 @@ install {
     repositories.mavenInstaller {
         pom {
             project {
-                name projectName
+                packaging 'aar'
                 groupId projectGroupId
                 artifactId projectArtifactId
+
+                name projectName
+                description projectDesc
                 version projectVersionName
-                packaging projectPackaging
                 url projectSiteUrl
                 licenses {
                     license {
@@ -60,6 +61,8 @@ install {
     }
 }
 
+
+version = projectVersionName
 
 // 命令 java -Djava.ext.dirs=. -jar dokka-fatjar.jar ./src/main/java -format javadoc -output ./build/doc
 
@@ -125,5 +128,6 @@ bintray {
         vcsUrl = projectGitUrl
         licenses = ["Apache-2.0"]
         publish = true
+        publicDownloadNumbers = true
     }
 }
