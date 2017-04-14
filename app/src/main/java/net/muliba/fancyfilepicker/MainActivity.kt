@@ -72,7 +72,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun gotoFilePicker() {
-        FilePicker().withActivity(MainActivity@this).requestCode(FILE_PICKER_REQUEST_CODE).start()
+        FilePicker()
+                .withActivity(this)
+                .requestCode(FILE_PICKER_REQUEST_CODE)
+                .start()
     }
 
     /**
