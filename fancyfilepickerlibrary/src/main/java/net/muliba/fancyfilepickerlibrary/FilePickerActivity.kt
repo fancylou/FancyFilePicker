@@ -40,6 +40,14 @@ class FilePickerActivity : AppCompatActivity() {
         refreshList(currentPath)
     }
 
+    override fun onBackPressed() {
+        if (rootPath.equals(currentPath)) {
+            super.onBackPressed()
+        }else {
+            upperLevel()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_file_picker, menu)
         return super.onCreateOptionsMenu(menu)
