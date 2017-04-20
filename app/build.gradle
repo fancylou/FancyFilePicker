@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 23
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "net.muliba.fancyfilepicker"
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -39,6 +39,6 @@ dependencies {
     compile "org.jetbrains.anko:anko-common:$anko_version"
 
     compile project(':fancyfilepickerlibrary')
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:23.4.0'
 
 }

@@ -10,7 +10,7 @@
         android:id="@+id/image_file_picker_file"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_file_black_48dp"
+        app:srcCompat="@drawable/ic_file_unknown_48dp"
         android:layout_marginLeft="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"

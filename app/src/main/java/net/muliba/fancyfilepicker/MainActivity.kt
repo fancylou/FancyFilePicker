@@ -16,6 +16,7 @@ import org.jetbrains.anko.toast
 class MainActivity : AppCompatActivity() {
 
     val FILE_PICKER_REQUEST_CODE = 1111
+    val FILE_PICKER_SINGLE_REQUEST_CODE = 2222
     val REQUEST_CODE_ASK_PERMISSIONS = 120
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,27 +26,37 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener {
             checkStoragePermission()
         }
+        buttonSingle.setOnClickListener {
+            gotoSingleFilePicker()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == FILE_PICKER_REQUEST_CODE) {
-                val buffer = StringBuffer()
-                val array = data?.getStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY)
-                array?.map { Log.i("MainActivity", "filePath:$it"); buffer.append(it).append(" ; ") }
-                textView.text = buffer.toString()
-                return
+            when (requestCode) {
+                FILE_PICKER_REQUEST_CODE -> {
+                    val buffer = StringBuffer()
+                    val array = data?.getStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY)
+                    array?.map { Log.i("MainActivity", "filePath:$it"); buffer.append(it).append(" ; ") }
+                    textView.text = buffer.toString()
+                    return
+                }
+                FILE_PICKER_SINGLE_REQUEST_CODE -> {
+                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+                    textView.text = result
+                    return
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        when(requestCode){
+        when (requestCode) {
             REQUEST_CODE_ASK_PERMISSIONS -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     gotoFilePicker()
-                }else {
+                } else {
                     toast("没有文件读写权限，无法使用文件选择器！")
                 }
             }
@@ -74,7 +85,16 @@ class MainActivity : AppCompatActivity() {
     private fun gotoFilePicker() {
         FilePicker()
                 .withActivity(this)
+                .title("这个是标题")
                 .requestCode(FILE_PICKER_REQUEST_CODE)
+                .start()
+    }
+
+    private fun gotoSingleFilePicker() {
+        FilePicker()
+                .withActivity(this)
+                .requestCode(FILE_PICKER_SINGLE_REQUEST_CODE)
+                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
                 .start()
     }
 

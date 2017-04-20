@@ -85,7 +85,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toLeftOf="@+id/tv_file_picker_upper_level"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_upper_level_light_black_36dp" />
+                app:srcCompat="@drawable/ic_upper_level_light_black_24dp" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 

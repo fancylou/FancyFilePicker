@@ -24,6 +24,10 @@ fun ViewGroup.inflate(layout: Int) : View {
     return LayoutInflater.from(context).inflate(layout, this, false)
 }
 
+
+/**
+ * 长度转成文件大小名称
+ */
 fun Long.friendlyFileLength() : String{
     if (this < 1024) {
         return this.toString()+" B"
