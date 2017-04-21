@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
@@ -85,7 +86,8 @@ class MainActivity : AppCompatActivity() {
     private fun gotoFilePicker() {
         FilePicker()
                 .withActivity(this)
-                .title("这个是标题")
+                .title("自定义标题")
+                .actionBarColor(ContextCompat.getColor(this, R.color.colorAccent))
                 .requestCode(FILE_PICKER_REQUEST_CODE)
                 .start()
     }

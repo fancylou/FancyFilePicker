@@ -1,46 +1,44 @@
 # FancyFilePicker
 
-Material Design File Picker library for Android , code with Kotlin.
+使用Kotlin写的一个Android文件选择器，轻便，漂亮，尽量遵循Material Design
 
-![](http://muliba.u.qiniudn.com/blog/post/FilePicker1.jpg)
+![](http://muliba.u.qiniudn.com/blog/post/filePicker1.2.0-1.jpeg?imageMogr2/auto-orient/thumbnail/720x/blur/1x0/quality/75|imageslim)
+
+自定义标题和背景色：
+
+![](http://muliba.u.qiniudn.com/blog/post/filePicker1.2.0-2.jpeg?imageMogr2/auto-orient/thumbnail/720x/blur/1x0/quality/75|imageslim)
+
+单选：
+
+![](http://muliba.u.qiniudn.com/blog/post/filePicker1.2.0-3.jpeg?imageMogr2/auto-orient/thumbnail/720x/blur/1x0/quality/75|imageslim)
 
 
 
-![](http://muliba.u.qiniudn.com/blog/post/FilePicker2.jpg)
+## 使用
 
-
-
-![](http://muliba.u.qiniudn.com/blog/post/FilePicker3.jpg)
-
-
-
-## using
-
-dependency in application module gradle file:
+在gradle文件添加引用:
 
 ```groovy
 dependencies {
-	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:1.1.1'
+	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:1.2.0'
 }
 ```
 
-
-
-open FancyFilePicker with:
+### Kotlin中使用
 
 ```kotlin
 FilePicker()
         .withActivity(this)
-        .requestCode(FILE_PICKER_REQUEST_CODE)
+        .requestCode(0)
         .start()
 ```
 
-and receive the result:
+接收结果:
 
 ```kotlin
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     if (resultCode == Activity.RESULT_OK) {
-        if (requestCode == FILE_PICKER_REQUEST_CODE) {
+        if (requestCode == 0) {
             val array = data?.getStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY)
             ...
             return
@@ -50,11 +48,59 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 }
 ```
 
-of course, do not forget add permission
+单选：
+
+```kotlin
+FilePicker()
+	.withActivity(this)
+    .requestCode(0)
+    .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
+    .start()
+```
+
+接收结果：
+
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == 0) {
+           val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+            ...
+            return
+        }
+    }
+    super.onActivityResult(requestCode, resultCode, data)
+}
+```
+
+自定义标题和颜色：
+
+```
+FilePicker()
+        .withActivity(this)
+        .title("自定义标题")
+        .actionBarColor(ContextCompat.getColor(this, R.color.colorAccent))
+        .requestCode(0)
+        .start()
+```
+
+### JAVA中使用
+
+```java
+new FilePicker().withActivity(this)
+                .requestCode(0)
+                .start();
+```
+
+还有别忘了添加权限：
 
 ```xml
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
+
+
+
+
 
 
 

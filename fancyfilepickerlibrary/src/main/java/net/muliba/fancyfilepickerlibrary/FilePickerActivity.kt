@@ -6,7 +6,6 @@ import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -44,7 +43,6 @@ class FilePickerActivity : AppCompatActivity() {
         var actionBarColor = intent.getIntExtra(ACTION_BAR_BACKGROUND_COLOR_KEY, 0xF44336)
         var actionBarTitle = intent.getStringExtra(ACTION_BAR_TITLE_KEY)
         chooseType = intent.getIntExtra(CHOOSE_TYPE_KEY, FilePicker.CHOOSE_TYPE_MULTIPLE)
-        Log.d("FilePickerActivity", actionBarTitle)
         if (TextUtils.isEmpty(actionBarTitle)) {
             actionBarTitle = getString(R.string.title_activity_file_picker)
         }
@@ -123,13 +121,11 @@ class FilePickerActivity : AppCompatActivity() {
                         }
                         //checkbox click
                         checkbox.setOnClickListener {
-                            Log.i("onBind", "checkBox click.....................")
                             var check = checkbox.isChecked
                             toggleItem(file.absolutePath, check)
                         }
                     }
                     holder.convertView.setOnClickListener { v ->
-                        Log.i("onBind", "item click.....................")
                         if (chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
                             chooseFileSingle(file.absolutePath)
                         }else{
@@ -173,8 +169,7 @@ class FilePickerActivity : AppCompatActivity() {
     private fun refreshList(path: String) {
         doAsync {
             val list: List<File> = File(path).listFiles{
-                dir, fileName ->
-                Log.d("refreshList", "fileName:$fileName, dir: ${dir.name}")
+                _, fileName ->
                 val pattern = Pattern.compile("\\..*")
                 !pattern.matcher(fileName).matches()
             }.map { it }.sortedWith(Comparator<File> { o1, o2 ->
