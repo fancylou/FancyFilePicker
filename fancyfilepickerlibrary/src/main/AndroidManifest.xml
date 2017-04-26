@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.muliba.fancyfilepickerlibrary">
 
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
@@ -12,6 +11,10 @@
         android:supportsRtl="true">
         <activity
             android:name=".FilePickerActivity"
+            android:label="@string/title_activity_file_picker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FileClassificationPickerActivity"
             android:label="@string/title_activity_file_picker"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

@@ -12,9 +12,14 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_file_picker.*
+import kotlinx.android.synthetic.main.breadcrumbs.*
+import kotlinx.android.synthetic.main.toolbar.*
 import net.muliba.fancyfilepickerlibrary.adapter.FileAdapter
 import net.muliba.fancyfilepickerlibrary.adapter.FileViewHolder
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
+import net.muliba.fancyfilepickerlibrary.util.Utils.ACTION_BAR_BACKGROUND_COLOR_KEY
+import net.muliba.fancyfilepickerlibrary.util.Utils.ACTION_BAR_TITLE_KEY
+import net.muliba.fancyfilepickerlibrary.util.Utils.CHOOSE_TYPE_KEY
 import net.muliba.fancyfilepickerlibrary.util.fileIcon
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
@@ -24,11 +29,6 @@ import java.util.regex.Pattern
 
 class FilePickerActivity : AppCompatActivity() {
 
-    companion object {
-        val ACTION_BAR_BACKGROUND_COLOR_KEY = "ACTION_BAR_BACKGROUND_COLOR_KEY"
-        val ACTION_BAR_TITLE_KEY = "ACTION_BAR_TITLE_KEY"
-        val CHOOSE_TYPE_KEY = "CHOOSE_TYPE_KEY"
-    }
 
     private val rootPath: String = Environment.getExternalStorageDirectory().absolutePath
     private var currentPath = rootPath

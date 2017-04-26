@@ -3,6 +3,7 @@ package net.muliba.fancyfilepickerlibrary
 import android.app.Activity
 import android.content.Intent
 import android.support.annotation.ColorInt
+import net.muliba.fancyfilepickerlibrary.util.Utils
 
 /**
  * Created by fancy on 2017/4/12.
@@ -17,6 +18,9 @@ class FilePicker {
         //选择类型
         val CHOOSE_TYPE_MULTIPLE = 0
         val CHOOSE_TYPE_SINGLE = 1
+        //选择方式
+        val CHOOSE_MODE_NORMAL = 0 //普通文件夹模式
+        val CHOOSE_MODE_CLASSIFICATION = 1//分类模式
     }
 
     private var requestCode: Int = FANCY_REQUEST_CODE
@@ -24,12 +28,20 @@ class FilePicker {
     private var actionBarColor: Int = 0xF44336
     private var actionBarTitle: String = ""
     private var chooseType = CHOOSE_TYPE_MULTIPLE //默认多选
+    private var mode = CHOOSE_MODE_NORMAL
 
     fun withActivity(activity: Activity) : FilePicker {
         this.activity = activity
         return this
     }
 
+    fun mode(mode: Int = CHOOSE_MODE_NORMAL) : FilePicker {
+        if (mode != CHOOSE_MODE_NORMAL && mode != CHOOSE_MODE_CLASSIFICATION) {
+            throw IllegalArgumentException("choose mode value is illegal, must be one of #FilePicker.CHOOSE_MODE_NORMAL or #FilePicker.CHOOSE_MODE_CLASSIFICATION")
+        }
+        this.mode = mode
+        return this
+    }
     /**
      * 定义requestCode
      * @param requestCode
@@ -76,14 +88,25 @@ class FilePicker {
         if (activity==null) {
             throw RuntimeException("not found Activity, Please execute the fun 'withActivity' ")
         }
-        startFilePicker(requestCode)
+        when(mode) {
+            0 -> startFilePicker()
+            else -> startFileClassificationPicker()
+        }
     }
 
-    private fun startFilePicker(requestCode: Int) {
+    private fun startFilePicker() {
         val intent = Intent(activity, FilePickerActivity::class.java)
-        intent.putExtra(FilePickerActivity.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
-        intent.putExtra(FilePickerActivity.ACTION_BAR_TITLE_KEY, actionBarTitle)
-        intent.putExtra(FilePickerActivity.CHOOSE_TYPE_KEY, chooseType)
+        intent.putExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
+        intent.putExtra(Utils.ACTION_BAR_TITLE_KEY, actionBarTitle)
+        intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)
+        activity?.startActivityForResult(intent, requestCode)
+    }
+
+    private fun startFileClassificationPicker() {
+        val intent = Intent(activity, FileClassificationPickerActivity::class.java)
+        intent.putExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
+        intent.putExtra(Utils.ACTION_BAR_TITLE_KEY, actionBarTitle)
+        intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)
         activity?.startActivityForResult(intent, requestCode)
     }
 }

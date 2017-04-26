@@ -30,7 +30,12 @@ class MainActivity : AppCompatActivity() {
         buttonSingle.setOnClickListener {
             gotoSingleFilePicker()
         }
+        buttonClassificationMode.setOnClickListener {
+            gotoClassificationModeFilePicker()
+        }
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
@@ -100,6 +105,12 @@ class MainActivity : AppCompatActivity() {
                 .start()
     }
 
+    private fun gotoClassificationModeFilePicker() {
+        FilePicker()
+                .withActivity(this)
+                .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION)
+                .start()
+    }
     /**
      * 请求写入权限
      */

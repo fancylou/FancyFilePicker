@@ -1,12 +1,7 @@
 package net.muliba.fancyfilepickerlibrary.adapter
 
-import android.graphics.Bitmap
 import android.support.v7.widget.RecyclerView
-import android.util.SparseArray
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import net.muliba.fancyfilepickerlibrary.R
 import net.muliba.fancyfilepickerlibrary.ext.inflate
 import java.io.File
@@ -50,41 +45,4 @@ abstract class FileAdapter : RecyclerView.Adapter<FileViewHolder>() {
     }
 
     abstract fun onBind(file: File, holder: FileViewHolder)
-}
-
-
-
-class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    val views: SparseArray<View> = SparseArray()
-    val convertView: View by lazy { itemView }
-
-
-
-
-    fun <T : View> getView(viewId: Int): T {
-        var view :View? = views.get(viewId)
-        if (view == null) {
-            view = convertView.findViewById(viewId)
-            views.put(viewId, view)
-        }
-
-        return view as T
-    }
-
-    fun setText(resId: Int, text: String): FileViewHolder{
-        val view = getView<TextView>(resId)
-        view.text = text
-        return this
-    }
-    fun setImageByResource(resId: Int, imageRes: Int) : FileViewHolder {
-        val image = getView<ImageView>(resId)
-        image.setImageResource(imageRes)
-        return this
-    }
-    fun setImageBitmap(resId: Int, bitmap: Bitmap) : FileViewHolder {
-        val image = getView<ImageView>(resId)
-        image.setImageBitmap(bitmap)
-        return this
-    }
 }

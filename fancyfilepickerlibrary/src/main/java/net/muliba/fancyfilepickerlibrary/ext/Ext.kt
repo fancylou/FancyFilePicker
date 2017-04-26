@@ -24,6 +24,12 @@ fun ViewGroup.inflate(layout: Int) : View {
     return LayoutInflater.from(context).inflate(layout, this, false)
 }
 
+/**
+ * 连加
+ */
+fun String.concat(other: String): String {
+    return this + other
+}
 
 /**
  * 长度转成文件大小名称
