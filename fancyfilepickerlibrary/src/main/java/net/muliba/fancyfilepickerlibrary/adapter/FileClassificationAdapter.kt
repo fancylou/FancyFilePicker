@@ -1,6 +1,7 @@
 package net.muliba.fancyfilepickerlibrary.adapter
 
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.view.ViewGroup
 import net.muliba.fancyfilepickerlibrary.R
 import net.muliba.fancyfilepickerlibrary.ext.inflate
@@ -17,23 +18,23 @@ abstract class FileClassificationAdapter(val items: ArrayList<DataSource>) : Rec
             is DataSource.Main -> {
                 val main = items[position] as DataSource.Main
                 bindMain(holder, main, position)
-                holder.convertView.setOnClickListener { clickMain(main, position) }
+                holder.convertView.setOnClickListener { v -> clickMain(v, main, position) }
             }
             is DataSource.File -> {
                 val file = items[position] as DataSource.File
                 bindFile(holder, file, position)
-                holder.convertView.setOnClickListener { clickFile(file, position) }
+                holder.convertView.setOnClickListener { v ->  clickFile(v, file, position) }
 
             }
             is DataSource.PictureFolder -> {
                 val folder = items[position] as DataSource.PictureFolder
                 bindPictureFolder(holder, folder, position)
-                holder.convertView.setOnClickListener { clickPictureFolder(folder, position) }
+                holder.convertView.setOnClickListener { v -> clickPictureFolder(v, folder, position) }
             }
             is DataSource.Picture -> {
                 val picture = items[position] as DataSource.Picture
                 bindPicture(holder, picture, position)
-                holder.convertView.setOnClickListener { clickPicture(picture, position) }
+                holder.convertView.setOnClickListener { v ->  clickPicture(v, picture, position) }
             }
         }
     }
@@ -62,12 +63,12 @@ abstract class FileClassificationAdapter(val items: ArrayList<DataSource>) : Rec
     }
 
     abstract fun bindMain(holder: FileViewHolder, main: DataSource.Main, position: Int)
-    abstract fun clickMain(main: DataSource.Main, position: Int)
+    abstract fun clickMain(v: View, main: DataSource.Main, position: Int)
     abstract fun bindFile(holder: FileViewHolder, file:DataSource.File, position: Int)
-    abstract fun clickFile(file: DataSource.File, position: Int)
+    abstract fun clickFile(v: View, file: DataSource.File, position: Int)
     abstract fun bindPictureFolder(holder: FileViewHolder, folder: DataSource.PictureFolder, position: Int)
-    abstract fun clickPictureFolder(folder: DataSource.PictureFolder, position: Int)
+    abstract fun clickPictureFolder(v: View, folder: DataSource.PictureFolder, position: Int)
     abstract fun bindPicture(holder: FileViewHolder, picture: DataSource.Picture, position: Int)
-    abstract fun clickPicture(picture: DataSource.Picture, position: Int)
+    abstract fun clickPicture(v: View, picture: DataSource.Picture, position: Int)
 
 }

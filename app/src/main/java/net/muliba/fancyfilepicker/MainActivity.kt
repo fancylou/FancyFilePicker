@@ -108,6 +108,7 @@ class MainActivity : AppCompatActivity() {
     private fun gotoClassificationModeFilePicker() {
         FilePicker()
                 .withActivity(this)
+                .requestCode(FILE_PICKER_REQUEST_CODE)
                 .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION)
                 .start()
     }

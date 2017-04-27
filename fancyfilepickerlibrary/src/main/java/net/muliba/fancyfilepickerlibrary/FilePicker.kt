@@ -35,6 +35,18 @@ class FilePicker {
         return this
     }
 
+    /**
+     * 设置选择类型
+     * @param type One of {@link #CHOOSE_TYPE_MULTIPLE}, {@link #CHOOSE_TYPE_SINGLE}.
+     */
+    fun chooseType(type: Int = CHOOSE_TYPE_MULTIPLE): FilePicker {
+        if (type != CHOOSE_TYPE_SINGLE && type!= CHOOSE_TYPE_MULTIPLE) {
+            throw IllegalArgumentException("chooseType value is illegal , must be one of #FilePicker.CHOOSE_TYPE_MULTIPLE or #FilePicker.CHOOSE_TYPE_SINGLE ")
+        }
+        chooseType = type
+        return this
+    }
+
     fun mode(mode: Int = CHOOSE_MODE_NORMAL) : FilePicker {
         if (mode != CHOOSE_MODE_NORMAL && mode != CHOOSE_MODE_CLASSIFICATION) {
             throw IllegalArgumentException("choose mode value is illegal, must be one of #FilePicker.CHOOSE_MODE_NORMAL or #FilePicker.CHOOSE_MODE_CLASSIFICATION")
@@ -61,18 +73,6 @@ class FilePicker {
     }
 
     /**
-     * 设置选择类型
-     * @param type One of {@link #CHOOSE_TYPE_MULTIPLE}, {@link #CHOOSE_TYPE_SINGLE}.
-     */
-    fun chooseType(type: Int = CHOOSE_TYPE_MULTIPLE): FilePicker {
-        if (type != CHOOSE_TYPE_SINGLE && type!= CHOOSE_TYPE_MULTIPLE) {
-            throw IllegalArgumentException("chooseType value is illegal , must be one of #FilePicker.CHOOSE_TYPE_MULTIPLE or #FilePicker.CHOOSE_TYPE_SINGLE ")
-        }
-        chooseType = type
-        return this
-    }
-
-    /**
      * 设置标题
      * @param title
      */
@@ -86,7 +86,7 @@ class FilePicker {
      */
     fun start() {
         if (activity==null) {
-            throw RuntimeException("not found Activity, Please execute the fun 'withActivity' ")
+            throw RuntimeException("not found Activity, Please execute the function 'withActivity' ")
         }
         when(mode) {
             0 -> startFilePicker()

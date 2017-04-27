@@ -1,5 +1,6 @@
 package net.muliba.fancyfilepickerlibrary
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -7,7 +8,10 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_file_classification_picker.*
@@ -19,7 +23,11 @@ import net.muliba.fancyfilepickerlibrary.ext.concat
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.model.Classification
 import net.muliba.fancyfilepickerlibrary.model.DataSource
-import net.muliba.fancyfilepickerlibrary.util.*
+import net.muliba.fancyfilepickerlibrary.util.ImageLoader
+import net.muliba.fancyfilepickerlibrary.util.TransparentItemDecoration
+import net.muliba.fancyfilepickerlibrary.util.Utils
+import net.muliba.fancyfilepickerlibrary.util.fileIcon
+import org.jetbrains.anko.toast
 
 class FileClassificationPickerActivity : AppCompatActivity(), FileClassificationUIView {
 
@@ -37,7 +45,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
                 mPresenter.countFiles(Classification.values()[position], countTv)
             }
 
-            override fun clickMain(main: DataSource.Main, position: Int) {
+            override fun clickMain(v: View, main: DataSource.Main, position: Int) {
                 Log.d("clickMain", "position:$position")
                 mLevel = position
                 refreshItems()
@@ -48,10 +56,32 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
                         .setText(R.id.tv_item_classification_picker_file_name, file.file.name)
                         .setText(R.id.tv_item_classification_picker_file_time, Utils.formatTime(file.file.lastModified()))
                         .setText(R.id.tv_item_classification_picker_file_size, file.file.length().friendlyFileLength())
+                val checkbox = holder.getView<CheckBox>(R.id.checkBox_item_classification_picker_file)
+                if (chooseType == FilePicker.CHOOSE_TYPE_SINGLE) {
+                    checkbox.visibility = View.GONE
+                }else {
+                    checkbox.visibility = View.VISIBLE
+                    checkbox.isChecked = false
+                    if (mSelected.contains(file.path)){
+                        checkbox.isChecked = true
+                    }
+                    //checkbox click
+                    checkbox.setOnClickListener {
+                        var check = checkbox.isChecked
+                        toggleItem(file.path, check)
+                    }
+                }
             }
 
-            override fun clickFile(file: DataSource.File, position: Int) {
-
+            override fun clickFile(v: View, file: DataSource.File, position: Int) {
+                if (chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
+                    chooseFileSingle(file.path)
+                }else{
+                    val checkbox = v.findViewById(R.id.checkBox_item_classification_picker_file) as CheckBox
+                    var check = checkbox.isChecked
+                    checkbox.isChecked = !check
+                    toggleItem(file.path, !check)
+                }
             }
 
             override fun bindPictureFolder(holder: FileViewHolder, folder: DataSource.PictureFolder, position: Int) {
@@ -62,7 +92,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
                 ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(folder.firstImagePath, icon)
             }
 
-            override fun clickPictureFolder(folder: DataSource.PictureFolder, position: Int) {
+            override fun clickPictureFolder(v: View, folder: DataSource.PictureFolder, position: Int) {
                 mLevel = 6
                 mPictureFolderDir = folder.dir
                 mPictureFolderName = folder.name
@@ -73,10 +103,32 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
                 val image = holder.getView<ImageView>(R.id.image_item_classification_picture)
                 image.setImageResource(R.drawable.ic_file_image_48dp)
                 ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(picture.path, image)
+                val checkbox = holder.getView<CheckBox>(R.id.checkBox_item_classification_picture)
+                if (chooseType == FilePicker.CHOOSE_TYPE_SINGLE) {
+                    checkbox.visibility = View.GONE
+                }else {
+                    checkbox.visibility = View.VISIBLE
+                    checkbox.isChecked = false
+                    if (mSelected.contains(picture.path)){
+                        checkbox.isChecked = true
+                    }
+                    //checkbox click
+                    checkbox.setOnClickListener {
+                        var check = checkbox.isChecked
+                        toggleItem(picture.path, check)
+                    }
+                }
             }
 
-            override fun clickPicture(picture: DataSource.Picture, position: Int) {
-
+            override fun clickPicture(v: View, picture: DataSource.Picture, position: Int) {
+                if (chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
+                    chooseFileSingle(picture.path)
+                }else{
+                    val checkbox = v.findViewById(R.id.checkBox_item_classification_picture) as CheckBox
+                    var check = checkbox.isChecked
+                    checkbox.isChecked = !check
+                    toggleItem(picture.path, !check)
+                }
             }
         }
     }
@@ -122,6 +174,28 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (chooseType== FilePicker.CHOOSE_TYPE_MULTIPLE){
+            menuInflater.inflate(R.menu.menu_file_picker, menu)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (mSelected.size == 0) {
+            menu?.findItem(R.id.menu_choose)?.title = getString(R.string.picker)
+        } else {
+            menu?.findItem(R.id.menu_choose)?.title = getString(R.string.picker) + "(" + mSelected.size.toString() + ")"
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.menu_choose -> chooseFile()
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun returnItems(items: ArrayList<DataSource>) {
         mProgressDialog.dismiss()
@@ -132,6 +206,39 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         refreshBreadcrumbs()
     }
 
+    /**
+     * 单选的时候点击返回
+     */
+    private fun chooseFileSingle(filePath: String) {
+        intent.putExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY, filePath)
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    /**
+     * 多选的时候返回
+     */
+    private fun chooseFile(): Boolean {
+        if (mSelected.size > 0) {
+            val array = ArrayList<String>()
+            mSelected.map { array.add(it) }
+            intent.putStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY, array)
+            setResult(Activity.RESULT_OK, intent)
+            finish()
+        } else {
+            toast(getString(R.string.message_please_select_more_than_one))
+        }
+        return true
+    }
+
+    private fun toggleItem(filePath: String, isChecked: Boolean) {
+        if (isChecked) {
+            mSelected.add(filePath)
+        } else {
+            mSelected.remove(filePath)
+        }
+        refreshMenu()
+    }
 
     private fun refreshItems() {
         mProgressDialog.show()
@@ -206,6 +313,10 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         }
     }
 
+    private fun refreshMenu() {
+        // getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+        invalidateOptionsMenu()
+    }
 
     private fun initAdapter() {
         setupLayoutManager()
@@ -225,6 +336,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
         }
     }
+
 
 
 }
