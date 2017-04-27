@@ -12,6 +12,10 @@
 
 ![](http://muliba.u.qiniudn.com/blog/post/filePicker1.2.0-3.jpeg?imageMogr2/auto-orient/thumbnail/720x/blur/1x0/quality/75|imageslim)
 
+分类模式：
+
+![](http://muliba.u.qiniudn.com/blog/post/FilePicker_2.0.0.jpg)
+
 
 
 ## 使用
@@ -20,7 +24,7 @@
 
 ```groovy
 dependencies {
-	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:1.2.0'
+	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:2.0.0'
 }
 ```
 
@@ -71,6 +75,16 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
     }
     super.onActivityResult(requestCode, resultCode, data)
 }
+```
+
+分类模式：
+
+```kotlin
+FilePicker()
+                .withActivity(this)
+                .requestCode(FILE_PICKER_REQUEST_CODE)
+                .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION)
+                .start()
 ```
 
 自定义标题和颜色：
