@@ -5,6 +5,7 @@ import android.support.annotation.StringRes
 import net.muliba.fancyfilepickerlibrary.R
 
 /**
+ * 文件分类
  * Created by fancy on 2017/4/26.
  */
 enum class Classification(@StringRes val stringResId: Int, @DrawableRes val imageResId: Int) {

@@ -1,4 +1,4 @@
-package net.muliba.fancyfilepickerlibrary
+package net.muliba.fancyfilepickerlibrary.ui
 
 import android.app.Activity
 import android.os.Bundle
@@ -14,6 +14,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_file_picker.*
 import kotlinx.android.synthetic.main.breadcrumbs.*
 import kotlinx.android.synthetic.main.toolbar.*
+import net.muliba.fancyfilepickerlibrary.FilePicker
+import net.muliba.fancyfilepickerlibrary.R
 import net.muliba.fancyfilepickerlibrary.adapter.FileAdapter
 import net.muliba.fancyfilepickerlibrary.adapter.FileViewHolder
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
@@ -186,6 +188,11 @@ class FilePickerActivity : AppCompatActivity() {
             })
             uiThread {
                 currentPath = path
+                if (currentPath.equals(rootPath)){
+                    breadcrumbs.visibility = View.GONE
+                }else {
+                    breadcrumbs.visibility = View.VISIBLE
+                }
                 tv_file_picker_folder_path.text = currentPath
                 if (list.size > 0) {
                     recycler_file_picker_list.visibility = View.VISIBLE

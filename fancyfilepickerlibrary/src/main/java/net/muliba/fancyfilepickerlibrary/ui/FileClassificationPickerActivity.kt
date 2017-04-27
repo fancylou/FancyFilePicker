@@ -1,4 +1,4 @@
-package net.muliba.fancyfilepickerlibrary
+package net.muliba.fancyfilepickerlibrary.ui
 
 import android.app.Activity
 import android.app.ProgressDialog
@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,6 +16,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_file_classification_picker.*
 import kotlinx.android.synthetic.main.breadcrumbs.*
 import kotlinx.android.synthetic.main.toolbar.*
+import net.muliba.fancyfilepickerlibrary.FilePicker
+import net.muliba.fancyfilepickerlibrary.R
 import net.muliba.fancyfilepickerlibrary.adapter.FileClassificationAdapter
 import net.muliba.fancyfilepickerlibrary.adapter.FileViewHolder
 import net.muliba.fancyfilepickerlibrary.ext.concat
@@ -46,7 +47,6 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
 
             override fun clickMain(v: View, main: DataSource.Main, position: Int) {
-                Log.d("clickMain", "position:$position")
                 mLevel = position
                 refreshItems()
             }
@@ -204,6 +204,13 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         setupLayoutManager()
         adapter.notifyDataSetChanged()
         refreshBreadcrumbs()
+        if (items.size > 0) {
+            recycler_file_classification_picker_list.visibility = View.VISIBLE
+            file_picker_empty.visibility = View.GONE
+        }else {
+            recycler_file_classification_picker_list.visibility = View.GONE
+            file_picker_empty.visibility = View.VISIBLE
+        }
     }
 
     /**

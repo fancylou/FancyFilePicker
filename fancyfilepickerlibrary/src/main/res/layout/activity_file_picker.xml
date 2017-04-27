@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="net.muliba.fancyfilepickerlibrary.FilePickerActivity">
+    tools:context="net.muliba.fancyfilepickerlibrary.ui.FilePickerActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -22,13 +22,13 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_file_picker_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/file_picker_empty"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/image_file_picker_empty"
@@ -52,7 +52,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/folder_empty"
+                android:text="@string/empty"
                 android:textColor="@color/secondary_text"
                 android:textSize="@dimen/font_title"
                 app:layout_constraintBottom_toBottomOf="parent"

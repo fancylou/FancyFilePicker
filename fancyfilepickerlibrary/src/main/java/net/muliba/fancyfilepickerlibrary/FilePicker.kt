@@ -3,6 +3,8 @@ package net.muliba.fancyfilepickerlibrary
 import android.app.Activity
 import android.content.Intent
 import android.support.annotation.ColorInt
+import net.muliba.fancyfilepickerlibrary.ui.FileClassificationPickerActivity
+import net.muliba.fancyfilepickerlibrary.ui.FilePickerActivity
 import net.muliba.fancyfilepickerlibrary.util.Utils
 
 /**

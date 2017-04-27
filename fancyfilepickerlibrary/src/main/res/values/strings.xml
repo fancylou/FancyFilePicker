@@ -7,13 +7,12 @@
     <string name="item_file_time_default">2017年4月27日 20:07</string>
     <string name="item_file_description_label"> KB</string>
     <string name="item_folder_name">文件夹</string>
-    <string name="folder_empty">空的文件夹</string>
     <string name="item_folder_description_default">0 项</string>
     <string name="item_folder_description_label"> 项</string>
     <string name="upper_level">上一级</string>
     <string name="message_already_on_top">已经在最顶层了！</string>
     <string name="message_please_select_more_than_one">请至少选择一个文件！</string>
-
+    <string name="empty">没有文件</string>
     <string name="classification_root">分类</string>
     <string name="picker_arrow"> > </string>
     <string name="item_picture_folder_count_default">0 张</string>

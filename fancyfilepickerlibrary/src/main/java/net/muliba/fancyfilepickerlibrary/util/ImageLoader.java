@@ -119,11 +119,11 @@ public class ImageLoader {
         return mInstance;
     }
 
-    public static ImageLoader getInstance(int threadCound, Type type) {
+    public static ImageLoader getInstance(int threadCount, Type type) {
         if (mInstance == null) {
             synchronized (ImageLoader.class) {
                 if (mInstance == null) {
-                    mInstance = new ImageLoader(threadCound, type);
+                    mInstance = new ImageLoader(threadCount, type);
                 }
             }
         }
@@ -203,7 +203,7 @@ public class ImageLoader {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds=true;
         BitmapFactory.decodeFile(path, options);
-        options.inSampleSize = caculateSampleSize(options, width, height);
+        options.inSampleSize = calculateSampleSize(options, width, height);
         //开始压缩图片
         options.inJustDecodeBounds = false;
         Bitmap bitmap = BitmapFactory.decodeFile(path, options);
@@ -217,7 +217,7 @@ public class ImageLoader {
      * @param height
      * @return
      */
-    private int caculateSampleSize(BitmapFactory.Options options, int width, int height) {
+    private int calculateSampleSize(BitmapFactory.Options options, int width, int height) {
         int oWidth = options.outWidth;
         int oHeight = options.outHeight;
         int inSampleSize = 1;

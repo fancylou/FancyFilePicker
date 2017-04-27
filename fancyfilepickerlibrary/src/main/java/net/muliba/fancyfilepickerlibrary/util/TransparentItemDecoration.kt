@@ -12,6 +12,7 @@ import android.view.View
 
 
 /**
+ * 透明分割线 给GridLayoutManager的列表进行分割
  * Created by fancy on 2017/4/27.
  */
 
@@ -23,7 +24,7 @@ class TransparentItemDecoration(context: Context, orientation: Int) : RecyclerVi
 
 
     override fun onDraw(c: Canvas, parent: RecyclerView, state: RecyclerView.State?) {
-
+        //啥也不干，只在getItemOffsets中进行偏移
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {

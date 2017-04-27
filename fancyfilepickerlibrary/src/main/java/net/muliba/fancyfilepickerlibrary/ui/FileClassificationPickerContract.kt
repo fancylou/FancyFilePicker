@@ -1,6 +1,5 @@
-package net.muliba.fancyfilepickerlibrary
+package net.muliba.fancyfilepickerlibrary.ui
 
-import android.app.Activity
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.TextView
@@ -10,17 +9,16 @@ import net.muliba.fancyfilepickerlibrary.model.DataSource
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
-import java.io.FilenameFilter
 
 /**
  * Created by fancy on 2017/4/26.
  */
 
 interface FileClassificationUIView {
-    fun returnItems(items: ArrayList<DataSource>)
+    fun returnItems(items: ArrayList<net.muliba.fancyfilepickerlibrary.model.DataSource>)
 }
 
-class FileClassificationPresenter(val mView: FileClassificationUIView, val activity: Activity) {
+class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.ui.FileClassificationUIView, val activity: android.app.Activity) {
 
     /**
      * 查询列表
@@ -42,14 +40,14 @@ class FileClassificationPresenter(val mView: FileClassificationUIView, val activ
     /**
      * 计算每个分类的数量
      */
-    fun countFiles(classification: Classification, countTv: TextView) {
+    fun countFiles(classification: net.muliba.fancyfilepickerlibrary.model.Classification, countTv: android.widget.TextView) {
         when (classification) {
-            Classification.PICTURE -> countPictures(countTv)
-            Classification.APPLICATION -> countApplication(countTv)
-            Classification.ARCHIVE -> countArchive(countTv)
-            Classification.AUDIO -> countAudio(countTv)
-            Classification.DOCUMENT -> countDocument(countTv)
-            Classification.VIDEO -> countVideo(countTv)
+            net.muliba.fancyfilepickerlibrary.model.Classification.PICTURE -> countPictures(countTv)
+            net.muliba.fancyfilepickerlibrary.model.Classification.APPLICATION -> countApplication(countTv)
+            net.muliba.fancyfilepickerlibrary.model.Classification.ARCHIVE -> countArchive(countTv)
+            net.muliba.fancyfilepickerlibrary.model.Classification.AUDIO -> countAudio(countTv)
+            net.muliba.fancyfilepickerlibrary.model.Classification.DOCUMENT -> countDocument(countTv)
+            net.muliba.fancyfilepickerlibrary.model.Classification.VIDEO -> countVideo(countTv)
         }
     }
 
@@ -59,8 +57,8 @@ class FileClassificationPresenter(val mView: FileClassificationUIView, val activ
      */
     private fun loadMainItems() {
         doAsync {
-            val items = ArrayList<DataSource>()
-            Classification.values().map { items.add(DataSource.Main(it.stringResId, it.imageResId, 0)) }
+            val items = ArrayList<net.muliba.fancyfilepickerlibrary.model.DataSource>()
+            net.muliba.fancyfilepickerlibrary.model.Classification.values().map { items.add(net.muliba.fancyfilepickerlibrary.model.DataSource.Main(it.stringResId, it.imageResId)) }
             uiThread {
                 mView.returnItems(items)
             }
@@ -72,15 +70,15 @@ class FileClassificationPresenter(val mView: FileClassificationUIView, val activ
      */
     private fun loadPictureFolderItems() {
         doAsync {
-            val items = ArrayList<DataSource>()
+            val items = ArrayList<net.muliba.fancyfilepickerlibrary.model.DataSource>()
             val set = HashSet<String>()
-            val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            val selectStr: String = MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + MediaStore.Images.Media.MIME_TYPE + " = ?"
+            val uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            val selectStr: String = android.provider.MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + android.provider.MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + android.provider.MediaStore.Images.Media.MIME_TYPE + " = ?"
             val array = arrayOf("image/jpeg", "image/jpg", "image/png")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Images.Media.DATE_MODIFIED + " DESC ")
+            val query = activity.contentResolver.query(uri, null, selectStr, array, android.provider.MediaStore.Images.Media.DATE_MODIFIED + " DESC ")
             while (query.moveToNext()) {
-                val filePath = query.getString(query.getColumnIndex(MediaStore.Images.Media.DATA))
-                val parent = File(filePath).parentFile
+                val filePath = query.getString(query.getColumnIndex(android.provider.MediaStore.Images.Media.DATA))
+                val parent = java.io.File(filePath).parentFile
                 if (!parent.exists()) {
                     continue
                 }
@@ -89,7 +87,7 @@ class FileClassificationPresenter(val mView: FileClassificationUIView, val activ
                     continue
                 }
                 set.add(parentDir)
-                val picSize = parent.list(FilenameFilter { _, filename ->
+                val picSize = parent.list(java.io.FilenameFilter { _, filename ->
                     if (filename.endsWith(".jpg") ||
                             filename.endsWith(".jpeg") ||
                             filename.endsWith(".png")) {
@@ -100,11 +98,11 @@ class FileClassificationPresenter(val mView: FileClassificationUIView, val activ
                 if (picSize < 1) {
                     continue
                 }
-                items.add(DataSource.PictureFolder(parent.name, parentDir, filePath, picSize))
+                items.add(net.muliba.fancyfilepickerlibrary.model.DataSource.PictureFolder(parent.name, parentDir, filePath, picSize))
             }
             //sort
             items.sortByDescending {
-                val o = it as DataSource.PictureFolder
+                val o = it as net.muliba.fancyfilepickerlibrary.model.DataSource.PictureFolder
                 o.childrenCount
             }
             query.close()
@@ -117,8 +115,8 @@ class FileClassificationPresenter(val mView: FileClassificationUIView, val activ
      */
     private fun loadPictureItems(parentPath: String) {
         doAsync {
-            val items = ArrayList<DataSource>()
-            val list = File(parentPath).listFiles(FilenameFilter { _, filename ->
+            val items = ArrayList<net.muliba.fancyfilepickerlibrary.model.DataSource>()
+            val list = java.io.File(parentPath).listFiles(java.io.FilenameFilter { _, filename ->
                 if (filename.endsWith(".jpg") ||
                         filename.endsWith(".jpeg") ||
                         filename.endsWith(".png")) {
