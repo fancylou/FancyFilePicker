@@ -12,7 +12,7 @@ import net.muliba.fancyfilepickerlibrary.R
 fun fileIcon(extension: String) : Int {
     return when(extension) {
         "ai" -> R.drawable.ic_file_ai_48dp
-        "mp3" -> R.drawable.ic_file_audio_48dp
+        "mp3","wav" -> R.drawable.ic_file_audio_48dp
         "mp4","m4v","mov" -> R.drawable.ic_file_mp4_48dp
         "mkv","rmvb","avi","wmv","mpg","mpeg" -> R.drawable.ic_file_video_48dp
         "jpg","jpeg","png","gif","bmp","raw","tiff" -> R.drawable.ic_file_image_48dp

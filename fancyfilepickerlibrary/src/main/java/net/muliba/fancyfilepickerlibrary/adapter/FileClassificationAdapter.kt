@@ -25,6 +25,16 @@ abstract class FileClassificationAdapter(val items: ArrayList<DataSource>) : Rec
                 holder.convertView.setOnClickListener { clickFile(file, position) }
 
             }
+            is DataSource.PictureFolder -> {
+                val folder = items[position] as DataSource.PictureFolder
+                bindPictureFolder(holder, folder, position)
+                holder.convertView.setOnClickListener { clickPictureFolder(folder, position) }
+            }
+            is DataSource.Picture -> {
+                val picture = items[position] as DataSource.Picture
+                bindPicture(holder, picture, position)
+                holder.convertView.setOnClickListener { clickPicture(picture, position) }
+            }
         }
     }
 
@@ -32,6 +42,8 @@ abstract class FileClassificationAdapter(val items: ArrayList<DataSource>) : Rec
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder {
         return when (viewType) {
             0 -> FileViewHolder(parent.inflate(R.layout.item_file_classification_picker_main))
+            1 -> FileViewHolder(parent.inflate(R.layout.item_file_classification_picker_picture_folder))
+            2 -> FileViewHolder(parent.inflate(R.layout.item_file_classification_picker_picture))
             else -> FileViewHolder(parent.inflate(R.layout.item_file_classification_picker_file))
         }
     }
@@ -43,7 +55,8 @@ abstract class FileClassificationAdapter(val items: ArrayList<DataSource>) : Rec
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is DataSource.Main -> 0
-            is DataSource.File -> 1
+            is DataSource.PictureFolder -> 1
+            is DataSource.Picture -> 2
             else -> -1
         }
     }
@@ -52,5 +65,9 @@ abstract class FileClassificationAdapter(val items: ArrayList<DataSource>) : Rec
     abstract fun clickMain(main: DataSource.Main, position: Int)
     abstract fun bindFile(holder: FileViewHolder, file:DataSource.File, position: Int)
     abstract fun clickFile(file: DataSource.File, position: Int)
+    abstract fun bindPictureFolder(holder: FileViewHolder, folder: DataSource.PictureFolder, position: Int)
+    abstract fun clickPictureFolder(folder: DataSource.PictureFolder, position: Int)
+    abstract fun bindPicture(holder: FileViewHolder, picture: DataSource.Picture, position: Int)
+    abstract fun clickPicture(picture: DataSource.Picture, position: Int)
 
 }

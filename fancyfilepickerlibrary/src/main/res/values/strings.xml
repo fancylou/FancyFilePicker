@@ -14,6 +14,10 @@
     <string name="message_already_on_top">已经在最顶层了！</string>
     <string name="message_please_select_more_than_one">请至少选择一个文件！</string>
 
+    <string name="classification_root">分类</string>
+    <string name="picker_arrow"> > </string>
+    <string name="item_picture_folder_count_default">0 张</string>
+    <string name="item_picture_folder_count_unit">张</string>
     <string name="item_classification_picture">图片</string>
     <string name="item_classification_audio">音频</string>
     <string name="item_classification_video">视频</string>

@@ -7,14 +7,19 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_file_classification_picker.*
+import kotlinx.android.synthetic.main.breadcrumbs.*
 import kotlinx.android.synthetic.main.toolbar.*
 import net.muliba.fancyfilepickerlibrary.adapter.FileClassificationAdapter
 import net.muliba.fancyfilepickerlibrary.adapter.FileViewHolder
+import net.muliba.fancyfilepickerlibrary.ext.concat
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.model.Classification
 import net.muliba.fancyfilepickerlibrary.model.DataSource
+import net.muliba.fancyfilepickerlibrary.util.ImageLoader
 import net.muliba.fancyfilepickerlibrary.util.Utils
 import net.muliba.fancyfilepickerlibrary.util.fileIcon
 
@@ -36,11 +41,8 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
             override fun clickMain(main: DataSource.Main, position: Int) {
                 Log.d("clickMain", "position:$position")
-                if (position != 0) {
-                    mProgressDialog.show()
-                    mLevel = position
-                    mPresenter.loadingItems(position)
-                }
+                mLevel = position
+                refreshItems()
             }
 
             override fun bindFile(holder: FileViewHolder, file: DataSource.File, position: Int) {
@@ -51,13 +53,43 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
 
             override fun clickFile(file: DataSource.File, position: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+            }
+
+            override fun bindPictureFolder(holder: FileViewHolder, folder: DataSource.PictureFolder, position: Int) {
+                holder.setText(R.id.tv_item_classification_picture_folder_name, folder.name)
+                        .setText(R.id.tv_item_classification_picture_folder_count, "" + folder.childrenCount + " " + getString(R.string.item_picture_folder_count_unit))
+                val icon = holder.getView<ImageView>(R.id.image_item_classification_picture_folder_icon)
+                icon.setImageResource(R.drawable.ic_file_image_48dp)
+                ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(folder.firstImagePath, icon)
+            }
+
+            override fun clickPictureFolder(folder: DataSource.PictureFolder, position: Int) {
+                mLevel = 6
+                mPictureFolderDir = folder.dir
+                mPictureFolderName = folder.name
+                refreshItems()
+            }
+
+            override fun bindPicture(holder: FileViewHolder, picture: DataSource.Picture, position: Int) {
+                val image = holder.getView<ImageView>(R.id.image_item_classification_picture)
+                image.setImageResource(R.drawable.ic_file_image_48dp)
+                ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(picture.path, image)
+            }
+
+            override fun clickPicture(picture: DataSource.Picture, position: Int) {
+
             }
         }
     }
-    private var mLevel = -1 //所处的位置
     private val mPresenter: FileClassificationPresenter = FileClassificationPresenter(this, this@FileClassificationPickerActivity)
     private val mProgressDialog: ProgressDialog by lazy { ProgressDialog(this) }
+
+    /*状态*/
+    private var mLevel = -1 //所处的位置
+    private var mPictureFolderName = ""
+    private var mPictureFolderDir = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,18 +107,18 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         toolbar.setBackgroundColor(actionBarColor)
         toolbar.setNavigationOnClickListener { finish() }
         initAdapter()
+        constraint_file_picker_upper_level_button.setOnClickListener { upperLevel() }
     }
 
     override fun onResume() {
         super.onResume()
-        mProgressDialog.show()
-        mPresenter.loadingItems()
+        refreshItems()
     }
 
     override fun onBackPressed() {
         if (mLevel == -1) {
             super.onBackPressed()
-        }else {
+        } else {
             upperLevel()
         }
     }
@@ -98,15 +130,79 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         mItems.addAll(items)
         setupLayoutManager()
         adapter.notifyDataSetChanged()
+        refreshBreadcrumbs()
+    }
+
+
+    private fun refreshItems() {
+        mProgressDialog.show()
+        mPresenter.loadingItems(mLevel, mPictureFolderDir)
     }
 
 
     private fun upperLevel() {
-        when(mLevel) {
-            0,1,2,3,4,5 -> {
+        when (mLevel) {
+            0, 1, 2, 3, 4, 5 -> {
                 mLevel = -1
-                mProgressDialog.show()
-                mPresenter.loadingItems()
+                refreshItems()
+            }
+            6 -> {
+                mLevel = 0
+                refreshItems()
+            }
+        }
+        mPictureFolderDir = ""
+        mPictureFolderName = ""
+    }
+
+    private fun refreshBreadcrumbs() {
+        when (mLevel) {
+            -1 -> {
+                breadcrumbs.visibility = View.GONE
+            }
+            0 -> {
+                tv_file_picker_folder_path.text = getString(R.string.classification_root)
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(getString(R.string.item_classification_picture))
+                breadcrumbs.visibility = View.VISIBLE
+            }
+            1 -> {
+                tv_file_picker_folder_path.text = getString(R.string.classification_root)
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(getString(R.string.item_classification_audio))
+                breadcrumbs.visibility = View.VISIBLE
+            }
+            2 -> {
+                tv_file_picker_folder_path.text = getString(R.string.classification_root)
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(getString(R.string.item_classification_video))
+                breadcrumbs.visibility = View.VISIBLE
+            }
+            3 -> {
+                tv_file_picker_folder_path.text = getString(R.string.classification_root)
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(getString(R.string.item_classification_file))
+                breadcrumbs.visibility = View.VISIBLE
+            }
+            4 -> {
+                tv_file_picker_folder_path.text = getString(R.string.classification_root)
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(getString(R.string.item_classification_archive))
+                breadcrumbs.visibility = View.VISIBLE
+            }
+            5 -> {
+                tv_file_picker_folder_path.text = getString(R.string.classification_root)
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(getString(R.string.item_classification_application))
+                breadcrumbs.visibility = View.VISIBLE
+            }
+            6 -> {
+                tv_file_picker_folder_path.text = getString(R.string.classification_root)
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(getString(R.string.item_classification_picture))
+                        .concat(getString(R.string.picker_arrow))
+                        .concat(mPictureFolderName)
+                breadcrumbs.visibility = View.VISIBLE
             }
         }
     }
@@ -118,17 +214,15 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
     }
 
     private fun setupLayoutManager() {
-        when(mLevel) {
-            -1 -> {
+        when (mLevel) {
+            -1, 6 -> {
                 recycler_file_classification_picker_list.layoutManager = GridLayoutManager(this, 3)
             }
-            1,2,3,4,5 -> {
+            0, 1, 2, 3, 4, 5 -> {
                 recycler_file_classification_picker_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             }
         }
     }
-
-
 
 
 }
