@@ -19,9 +19,7 @@ import net.muliba.fancyfilepickerlibrary.ext.concat
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.model.Classification
 import net.muliba.fancyfilepickerlibrary.model.DataSource
-import net.muliba.fancyfilepickerlibrary.util.ImageLoader
-import net.muliba.fancyfilepickerlibrary.util.Utils
-import net.muliba.fancyfilepickerlibrary.util.fileIcon
+import net.muliba.fancyfilepickerlibrary.util.*
 
 class FileClassificationPickerActivity : AppCompatActivity(), FileClassificationUIView {
 
@@ -85,6 +83,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
     private val mPresenter: FileClassificationPresenter = FileClassificationPresenter(this, this@FileClassificationPickerActivity)
     private val mProgressDialog: ProgressDialog by lazy { ProgressDialog(this) }
 
+    private val mItemDecoration by lazy { TransparentItemDecoration(this@FileClassificationPickerActivity, LinearLayoutManager.VERTICAL) }
     /*状态*/
     private var mLevel = -1 //所处的位置
     private var mPictureFolderName = ""
@@ -217,9 +216,12 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         when (mLevel) {
             -1, 6 -> {
                 recycler_file_classification_picker_list.layoutManager = GridLayoutManager(this, 3)
+                recycler_file_classification_picker_list.removeItemDecoration(mItemDecoration)
+                recycler_file_classification_picker_list.addItemDecoration(mItemDecoration)
             }
             0, 1, 2, 3, 4, 5 -> {
                 recycler_file_classification_picker_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                recycler_file_classification_picker_list.removeItemDecoration(mItemDecoration)
             }
         }
     }
