@@ -6,9 +6,8 @@ import android.graphics.Rect
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.TypedValue
 import android.view.View
-
+import net.muliba.fancyfilepickerlibrary.util.Utils.dip2px
 
 
 /**
@@ -67,8 +66,5 @@ class TransparentItemDecoration(context: Context, orientation: Int) : RecyclerVi
     }
 
 
-    fun dip2px(context: Context, dpValue: Float): Int {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue,
-                context.resources.displayMetrics).toInt()
-    }
+
 }

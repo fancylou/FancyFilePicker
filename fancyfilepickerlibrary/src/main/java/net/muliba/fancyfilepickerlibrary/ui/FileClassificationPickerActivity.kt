@@ -27,6 +27,7 @@ import net.muliba.fancyfilepickerlibrary.model.DataSource
 import net.muliba.fancyfilepickerlibrary.util.ImageLoader
 import net.muliba.fancyfilepickerlibrary.util.TransparentItemDecoration
 import net.muliba.fancyfilepickerlibrary.util.Utils
+import net.muliba.fancyfilepickerlibrary.util.Utils.formatTime
 import net.muliba.fancyfilepickerlibrary.util.fileIcon
 import org.jetbrains.anko.toast
 
@@ -54,7 +55,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             override fun bindFile(holder: FileViewHolder, file: DataSource.File, position: Int) {
                 holder.setImageByResource(R.id.image_item_classification_picker_file_icon, fileIcon(file.file.extension))
                         .setText(R.id.tv_item_classification_picker_file_name, file.file.name)
-                        .setText(R.id.tv_item_classification_picker_file_time, Utils.formatTime(file.file.lastModified()))
+                        .setText(R.id.tv_item_classification_picker_file_time, formatTime(file.file.lastModified()))
                         .setText(R.id.tv_item_classification_picker_file_size, file.file.length().friendlyFileLength())
                 val checkbox = holder.getView<CheckBox>(R.id.checkBox_item_classification_picker_file)
                 if (chooseType == FilePicker.CHOOSE_TYPE_SINGLE) {

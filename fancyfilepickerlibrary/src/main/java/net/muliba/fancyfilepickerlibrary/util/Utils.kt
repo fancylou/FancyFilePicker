@@ -1,5 +1,7 @@
 package net.muliba.fancyfilepickerlibrary.util
 
+import android.content.Context
+import android.util.TypedValue
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,5 +18,10 @@ object Utils {
     fun formatTime(time: Long): String {
         val format: SimpleDateFormat = SimpleDateFormat("yyyy年MM月dd日 HH:mm")
         return format.format(Date(time))
+    }
+
+    fun dip2px(context: Context, dpValue: Float): Int {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue,
+                context.resources.displayMetrics).toInt()
     }
 }
