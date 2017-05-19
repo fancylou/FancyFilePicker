@@ -16,7 +16,8 @@
         <activity
             android:name=".ui.FileClassificationPickerActivity"
             android:label="@string/title_activity_file_picker"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.ImageClipActivity"></activity>
     </application>
 
 </manifest>

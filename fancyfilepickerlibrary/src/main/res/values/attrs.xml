@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ClipImageLayout">
+        <attr name="image_src" format="reference"></attr>
+        <attr name="clip_mode">
+            <enum name="SQUARE" value="0"></enum>
+            <enum name="SCREEN" value="1"></enum>
+        </attr>
+        <attr name="horizontal_padding" format="dimension"></attr>
+    </declare-styleable>
+</resources>

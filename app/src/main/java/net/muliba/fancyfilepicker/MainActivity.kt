@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
+import net.muliba.fancyfilepickerlibrary.ui.ImageClipActivity
 import org.jetbrains.anko.toast
 
 
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
         }
         buttonClassificationMode.setOnClickListener {
             gotoClassificationModeFilePicker()
+        }
+        buttonClip.setOnClickListener {
+            val intent = Intent(this, ImageClipActivity::class.java)
+            startActivity(intent)
         }
     }
 

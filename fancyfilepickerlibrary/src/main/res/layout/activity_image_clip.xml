@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.muliba.fancyfilepickerlibrary.ui.ImageClipActivity">
+
+    <net.muliba.fancyfilepickerlibrary.ui.view.ClipImageLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:horizontal_padding="33dp"
+        app:clip_mode="SCREEN"
+        app:image_src="@drawable/test"></net.muliba.fancyfilepickerlibrary.ui.view.ClipImageLayout>
+
+</android.support.constraint.ConstraintLayout>
