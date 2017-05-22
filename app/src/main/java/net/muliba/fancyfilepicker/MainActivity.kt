@@ -8,10 +8,9 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
-import net.muliba.fancyfilepickerlibrary.ui.ImageClipActivity
+import net.muliba.fancyfilepickerlibrary.PicturePicker
 import org.jetbrains.anko.toast
 
 
@@ -19,6 +18,8 @@ class MainActivity : AppCompatActivity() {
 
     val FILE_PICKER_REQUEST_CODE = 1111
     val FILE_PICKER_SINGLE_REQUEST_CODE = 2222
+    val PICTURE_PICKER_REQUEST_CODE = 1100
+    val PICTURE_PICKER_SINGLE_REQUEST_CODE = 2200
     val REQUEST_CODE_ASK_PERMISSIONS = 120
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +36,15 @@ class MainActivity : AppCompatActivity() {
             gotoClassificationModeFilePicker()
         }
         buttonClip.setOnClickListener {
-            val intent = Intent(this, ImageClipActivity::class.java)
-            startActivity(intent)
+            PicturePicker().withActivity(this)
+                    .requestCode(PICTURE_PICKER_SINGLE_REQUEST_CODE)
+                    .start()
+        }
+        buttonMultiChoose.setOnClickListener {
+            PicturePicker().withActivity(this)
+                    .chooseType(PicturePicker.CHOOSE_TYPE_MULTIPLE)
+                    .requestCode(PICTURE_PICKER_REQUEST_CODE)
+                    .start()
         }
     }
 
@@ -48,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 FILE_PICKER_REQUEST_CODE -> {
                     val buffer = StringBuffer()
                     val array = data?.getStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY)
-                    array?.map { Log.i("MainActivity", "filePath:$it"); buffer.append(it).append(" ; ") }
+                    array?.map { buffer.append(it).append(" ; ") }
                     textView.text = buffer.toString()
                     return
                 }
@@ -57,6 +65,19 @@ class MainActivity : AppCompatActivity() {
                     textView.text = result
                     return
                 }
+                PICTURE_PICKER_REQUEST_CODE ->{
+                    val buffer = StringBuffer()
+                    val array = data?.getStringArrayListExtra(PicturePicker.FANCY_PICTURE_PICKER_ARRAY_LIST_RESULT_KEY)
+                    array?.map { buffer.append(it).append(" ; ") }
+                    textView.text = buffer.toString()
+                    return
+                }
+                PICTURE_PICKER_SINGLE_REQUEST_CODE -> {
+                    val result = data?.getStringExtra(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY)
+                    textView.text = result
+                    return
+                }
+
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

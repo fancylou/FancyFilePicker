@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+
+    <ImageView
+        android:id="@+id/id_dir_item_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="17dp"
+        android:paddingTop="9dp"
+        android:scaleType="fitXY"
+        android:background="@drawable/pic_dir_background"
+        android:src="@drawable/ic_file_image_48dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/id_dir_item_image"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/id_dir_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="文件夹"/>
+        <TextView
+            android:id="@+id/id_dir_item_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textSize="10sp"
+            android:textColor="#444"
+            android:text="1112"/>
+    </LinearLayout>
+
+
+</RelativeLayout>
