@@ -8,7 +8,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.CheckBox
@@ -99,8 +98,6 @@ class PictureChooseActivity : AppCompatActivity(), PictureChooseContract.View {
     }
 
     override fun firstInit(pictureFolders: List<DataSource.PictureFolder>, mCurrentDir: File?) {
-        Log.d("firstInit", "size : ${pictureFolders.size}")
-        Log.d("firstInit", "name : ${mCurrentDir?.name}")
         this.mCurrentDir = mCurrentDir
         dirNameTV.text = mCurrentDir?.name
         presenter.loadPictures(mCurrentDir)

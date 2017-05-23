@@ -7,6 +7,7 @@
 
     <net.muliba.fancyfilepickerlibrary.ui.view.ClipImageLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/clipImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:horizontal_padding="33dp"

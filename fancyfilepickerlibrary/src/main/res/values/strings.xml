@@ -3,6 +3,7 @@
     <string name="title_activity_file_picker">文件选择器</string>
     <string name="title_activity_image_picker">图片选择器</string>
     <string name="picker">选择</string>
+    <string name="clip">裁剪</string>
     <string name="item_file_name">文件名</string>
     <string name="item_file_description_default">0 KB</string>
     <string name="item_file_time_default">2017年4月27日 20:07</string>
