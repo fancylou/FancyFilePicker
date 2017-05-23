@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import android.widget.CheckBox
@@ -80,7 +81,7 @@ class PictureChooseActivity : AppCompatActivity(), PictureChooseContract.View {
         }
         bottomDirChooseBtn.setOnClickListener {
             popupWindow.animationStyle = R.style.dir_popupwindow_anim
-            popupWindow.showAsDropDown(bottomToolBarRL, 0, 0)
+            popupWindow.showAtLocation(content, Gravity.BOTTOM, 0, 0)
             lightOff()
         }
 
@@ -105,6 +106,7 @@ class PictureChooseActivity : AppCompatActivity(), PictureChooseContract.View {
         popupWindow.setOnDismissListener { lightOn() }
         popupWindow.setOnDirSelectedListener {
             this.mCurrentDir = File(it.dir)
+            dirNameTV.text = this.mCurrentDir?.name
             presenter.loadPictures(this.mCurrentDir)
             popupWindow.dismiss()
         }

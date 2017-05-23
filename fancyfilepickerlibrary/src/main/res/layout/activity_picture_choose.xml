@@ -56,16 +56,13 @@
                 android:id="@+id/pictureChooseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:layout_marginRight="10dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/white"
                 android:background="@null"
+                android:gravity="center_vertical"
+                android:textAlignment="center"
                 android:text="@string/picker"
-                />
+                android:textColor="@android:color/white" />
 
         </RelativeLayout>
     </FrameLayout>
