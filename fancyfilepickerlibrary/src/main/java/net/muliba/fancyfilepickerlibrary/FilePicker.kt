@@ -2,6 +2,7 @@ package net.muliba.fancyfilepickerlibrary
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.support.annotation.ColorInt
 import net.muliba.fancyfilepickerlibrary.ui.FileClassificationPickerActivity
 import net.muliba.fancyfilepickerlibrary.ui.FilePickerActivity
@@ -27,7 +28,7 @@ class FilePicker {
 
     private var requestCode: Int = FANCY_REQUEST_CODE
     private var activity: Activity? = null
-    private var actionBarColor: Int = 0xF44336
+    private var actionBarColor: Int = Color.parseColor("#F44336")
     private var actionBarTitle: String = ""
     private var chooseType = CHOOSE_TYPE_MULTIPLE //默认多选
     private var mode = CHOOSE_MODE_NORMAL

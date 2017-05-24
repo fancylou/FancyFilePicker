@@ -2,6 +2,7 @@ package net.muliba.fancyfilepickerlibrary.ui
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
@@ -147,7 +148,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_file_classification_picker)
         //获取数据
-        var actionBarColor = intent.getIntExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, 0xF44336)
+        var actionBarColor = intent.getIntExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, Color.parseColor("#F44336"))
         var actionBarTitle = intent.getStringExtra(Utils.ACTION_BAR_TITLE_KEY)
         chooseType = intent.getIntExtra(Utils.CHOOSE_TYPE_KEY, FilePicker.CHOOSE_TYPE_MULTIPLE)
         if (TextUtils.isEmpty(actionBarTitle)) {

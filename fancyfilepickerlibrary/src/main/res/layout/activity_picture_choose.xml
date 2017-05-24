@@ -39,8 +39,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    tools:text="所有图片"/>
+                    android:textSize="16sp"/>
                 <ImageView
                     android:id="@+id/dirSelectMoreImage"
                     android:layout_width="12dp"

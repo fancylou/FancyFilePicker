@@ -54,7 +54,7 @@ class PictureChooseActivity : AppCompatActivity(), PictureChooseContract.View {
         var actionBarTitle = intent.getStringExtra(Utils.ACTION_BAR_TITLE_KEY)
         chooseType = intent.getIntExtra(Utils.CHOOSE_TYPE_KEY, PicturePicker.CHOOSE_TYPE_SINGLE)
         if (TextUtils.isEmpty(actionBarTitle)) {
-            actionBarTitle = getString(R.string.title_activity_file_picker)
+            actionBarTitle = getString(R.string.title_activity_image_picker)
         }
         toolbar.title = actionBarTitle
         setSupportActionBar(toolbar)
