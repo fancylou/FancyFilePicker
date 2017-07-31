@@ -15,15 +15,16 @@ import net.muliba.fancyfilepickerlibrary.util.Utils
 class FilePicker {
 
     companion object {
-        val FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY = "fancy_file_picker_array_result"
-        val FANCY_FILE_PICKER_SINGLE_RESULT_KEY = "fancy_file_picker_single_result"
-        val FANCY_REQUEST_CODE = 1024
+        @JvmStatic val FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY @JvmName("FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY")get() = "fancy_file_picker_array_result"
+        @JvmStatic val FANCY_FILE_PICKER_SINGLE_RESULT_KEY @JvmName("FANCY_FILE_PICKER_SINGLE_RESULT_KEY")get() = "fancy_file_picker_single_result"
+
+        @JvmStatic val FANCY_REQUEST_CODE @JvmName("FANCY_REQUEST_CODE")get() = 1024
         //选择类型
-        val CHOOSE_TYPE_MULTIPLE = 0
-        val CHOOSE_TYPE_SINGLE = 1
+        @JvmStatic val CHOOSE_TYPE_MULTIPLE @JvmName("CHOOSE_TYPE_MULTIPLE")get() = 0
+        @JvmStatic val CHOOSE_TYPE_SINGLE @JvmName("CHOOSE_TYPE_SINGLE")get() = 1
         //选择方式
-        val CHOOSE_MODE_NORMAL = 0 //普通文件夹模式
-        val CHOOSE_MODE_CLASSIFICATION = 1//分类模式
+        @JvmStatic val CHOOSE_MODE_NORMAL @JvmName("CHOOSE_MODE_NORMAL")get() = 0 //普通文件夹模式
+        @JvmStatic val CHOOSE_MODE_CLASSIFICATION @JvmName("CHOOSE_MODE_CLASSIFICATION")get() = 1//分类模式
     }
 
     private var requestCode: Int = FANCY_REQUEST_CODE

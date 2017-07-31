@@ -13,13 +13,13 @@ import net.muliba.fancyfilepickerlibrary.util.Utils
 
 class PicturePicker {
     companion object {
-        val FANCY_REQUEST_CODE = 1024
+        @JvmStatic val FANCY_REQUEST_CODE @JvmName("FANCY_REQUEST_CODE") get() = 1024
 
-        val FANCY_PICTURE_PICKER_ARRAY_LIST_RESULT_KEY = "fancy_picture_picker_array_result"
-        val FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY = "fancy_picture_picker_single_result"
+        @JvmStatic val FANCY_PICTURE_PICKER_ARRAY_LIST_RESULT_KEY @JvmName("FANCY_PICTURE_PICKER_ARRAY_LIST_RESULT_KEY") get() = "fancy_picture_picker_array_result"
+        @JvmStatic val FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY @JvmName("FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY") get() = "fancy_picture_picker_single_result"
         //选择类型
-        val CHOOSE_TYPE_MULTIPLE = 0
-        val CHOOSE_TYPE_SINGLE = 1
+        @JvmStatic val CHOOSE_TYPE_MULTIPLE @JvmName("CHOOSE_TYPE_MULTIPLE") get() = 0
+        @JvmStatic val CHOOSE_TYPE_SINGLE @JvmName("CHOOSE_TYPE_SINGLE") get() = 1
     }
 
     private var requestCode: Int = FANCY_REQUEST_CODE
@@ -34,8 +34,8 @@ class PicturePicker {
         return this
     }
 
-    fun chooseType(type: Int = CHOOSE_TYPE_SINGLE) : PicturePicker {
-        if (type != CHOOSE_TYPE_SINGLE && type!= CHOOSE_TYPE_MULTIPLE) {
+    fun chooseType(type: Int = CHOOSE_TYPE_SINGLE): PicturePicker {
+        if (type != CHOOSE_TYPE_SINGLE && type != CHOOSE_TYPE_MULTIPLE) {
             throw IllegalArgumentException("chooseType value is illegal , must be one of #PicturePicker.CHOOSE_TYPE_MULTIPLE or #PicturePicker.CHOOSE_TYPE_SINGLE ")
         }
         chooseType = type
@@ -73,7 +73,7 @@ class PicturePicker {
      * 启动选择器
      */
     fun start() {
-        if (activity==null) {
+        if (activity == null) {
             throw RuntimeException("not found Activity, Please execute the function 'withActivity' ")
         }
         val intent = Intent(activity, PictureChooseActivity::class.java)

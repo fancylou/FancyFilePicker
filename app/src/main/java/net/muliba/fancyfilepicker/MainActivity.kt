@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity() {
                     .requestCode(PICTURE_PICKER_REQUEST_CODE)
                     .start()
         }
+        buttonJavaMain.setOnClickListener {
+            val intent = Intent(this@MainActivity, JavaMainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 
