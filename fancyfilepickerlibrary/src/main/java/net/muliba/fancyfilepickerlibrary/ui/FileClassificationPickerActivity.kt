@@ -151,6 +151,12 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         var actionBarColor = intent.getIntExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, Color.parseColor("#F44336"))
         var actionBarTitle = intent.getStringExtra(Utils.ACTION_BAR_TITLE_KEY)
         chooseType = intent.getIntExtra(Utils.CHOOSE_TYPE_KEY, FilePicker.CHOOSE_TYPE_MULTIPLE)
+        val mBackResults = intent.getStringArrayListExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY) ?: ArrayList<String>()
+        if (!mBackResults.isEmpty()) {
+            mBackResults.map {
+                mSelected.add(it)
+            }
+        }
         if (TextUtils.isEmpty(actionBarTitle)) {
             actionBarTitle = getString(R.string.title_activity_file_picker)
         }

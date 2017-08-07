@@ -7,7 +7,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
-import net.muliba.fancyfilepickerlibrary.util.Utils.dip2px
+import org.jetbrains.anko.dip
 
 
 /**
@@ -18,7 +18,7 @@ import net.muliba.fancyfilepickerlibrary.util.Utils.dip2px
 class TransparentItemDecoration(context: Context, orientation: Int) : RecyclerView.ItemDecoration() {
 
     private var mOrientation = orientation
-    private val mWidth = dip2px(context, 8f)
+    private val mWidth = context.dip(2)  //2dp
 
 
 

@@ -53,6 +53,12 @@ class PictureChooseActivity : AppCompatActivity(), PictureChooseContract.View {
         var actionBarColor = intent.getIntExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, 0xF44336)
         var actionBarTitle = intent.getStringExtra(Utils.ACTION_BAR_TITLE_KEY)
         chooseType = intent.getIntExtra(Utils.CHOOSE_TYPE_KEY, PicturePicker.CHOOSE_TYPE_SINGLE)
+        val mBackResults = intent.getStringArrayListExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY) ?: ArrayList<String>()
+        if (!mBackResults.isEmpty()) {
+            mBackResults.map {
+                mSelected.add(it)
+            }
+        }
         if (TextUtils.isEmpty(actionBarTitle)) {
             actionBarTitle = getString(R.string.title_activity_image_picker)
         }

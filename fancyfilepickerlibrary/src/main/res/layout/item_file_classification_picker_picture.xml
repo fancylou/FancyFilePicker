@@ -8,24 +8,24 @@
 
     <ImageView
         android:id="@+id/image_item_classification_picture"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/ic_file_image_48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:srcCompat="@drawable/ic_file_image_48dp" />
 
     <CheckBox
         android:id="@+id/checkBox_item_classification_picture"
+        android:button="@drawable/select_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-         />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

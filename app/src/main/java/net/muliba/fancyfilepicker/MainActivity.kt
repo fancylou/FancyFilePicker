@@ -50,6 +50,22 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, JavaMainActivity::class.java)
             startActivity(intent)
         }
+
+
+        button2.setOnClickListener {
+            FilePicker().withActivity(this)
+                    .chooseType(FilePicker.CHOOSE_TYPE_MULTIPLE)
+                    .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION)
+                    .existingResults(arrayListOf("/storage/emulated/0/DCIM/Camera/IMG_20170805_143117.jpg","/storage/emulated/0/DCIM/Camera/IMG_20170805_142052.jpg",
+                            "/storage/emulated/0/DCIM/Camera/VID_20170805_200227.mp4"))
+                    .requestCode(FILE_PICKER_REQUEST_CODE)
+                    .start()
+//            PicturePicker().withActivity(this)
+//                    .chooseType(PicturePicker.CHOOSE_TYPE_MULTIPLE)
+//                    .existingResults(arrayListOf("/storage/emulated/0/DCIM/Camera/IMG_20170805_143117.jpg","/storage/emulated/0/DCIM/Camera/IMG_20170805_142052.jpg"))
+//                    .requestCode(PICTURE_PICKER_REQUEST_CODE)
+//                    .start()
+        }
     }
 
 

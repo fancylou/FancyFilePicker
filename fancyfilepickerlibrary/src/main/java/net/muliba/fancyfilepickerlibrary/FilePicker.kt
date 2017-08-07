@@ -33,6 +33,7 @@ class FilePicker {
     private var actionBarTitle: String = ""
     private var chooseType = CHOOSE_TYPE_MULTIPLE //默认多选
     private var mode = CHOOSE_MODE_NORMAL
+    private var existingResults = ArrayList<String>()
 
     fun withActivity(activity: Activity) : FilePicker {
         this.activity = activity
@@ -64,6 +65,14 @@ class FilePicker {
      */
     fun requestCode(requestCode: Int): FilePicker {
         this.requestCode = requestCode
+        return this
+    }
+
+    fun existingResults(results:ArrayList<String>): FilePicker {
+        this.existingResults.clear()
+        if (!results.isEmpty()) {
+            this.existingResults.addAll(results)
+        }
         return this
     }
 
@@ -103,6 +112,7 @@ class FilePicker {
         intent.putExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
         intent.putExtra(Utils.ACTION_BAR_TITLE_KEY, actionBarTitle)
         intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)
+        intent.putExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY, existingResults)
         activity?.startActivityForResult(intent, requestCode)
     }
 
@@ -111,6 +121,7 @@ class FilePicker {
         intent.putExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
         intent.putExtra(Utils.ACTION_BAR_TITLE_KEY, actionBarTitle)
         intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)
+        intent.putExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY, existingResults)
         activity?.startActivityForResult(intent, requestCode)
     }
 }

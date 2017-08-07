@@ -22,6 +22,7 @@ import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.util.Utils.ACTION_BAR_BACKGROUND_COLOR_KEY
 import net.muliba.fancyfilepickerlibrary.util.Utils.ACTION_BAR_TITLE_KEY
 import net.muliba.fancyfilepickerlibrary.util.Utils.CHOOSE_TYPE_KEY
+import net.muliba.fancyfilepickerlibrary.util.Utils.MULIT_CHOOSE_BACK_RESULTS_KEY
 import net.muliba.fancyfilepickerlibrary.util.fileIcon
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
@@ -45,6 +46,13 @@ class FilePickerActivity : AppCompatActivity() {
         var actionBarColor = intent.getIntExtra(ACTION_BAR_BACKGROUND_COLOR_KEY, 0xF44336)
         var actionBarTitle = intent.getStringExtra(ACTION_BAR_TITLE_KEY)
         chooseType = intent.getIntExtra(CHOOSE_TYPE_KEY, FilePicker.CHOOSE_TYPE_MULTIPLE)
+        val mBackResults = intent.getStringArrayListExtra(MULIT_CHOOSE_BACK_RESULTS_KEY) ?: ArrayList<String>()
+        if (!mBackResults.isEmpty()) {
+            mBackResults.map {
+                mSelected.add(it)
+            }
+        }
+
         if (TextUtils.isEmpty(actionBarTitle)) {
             actionBarTitle = getString(R.string.title_activity_file_picker)
         }

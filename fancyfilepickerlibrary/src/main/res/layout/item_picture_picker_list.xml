@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/image_picture_picker"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="100dp"
         app:srcCompat="@drawable/ic_file_image_48dp"
         android:scaleType="centerCrop"
@@ -21,13 +21,11 @@
         android:id="@+id/checkBox_picture_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="8dp"
+        android:button="@drawable/select_check"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent"  />
 
 
 </android.support.constraint.ConstraintLayout>

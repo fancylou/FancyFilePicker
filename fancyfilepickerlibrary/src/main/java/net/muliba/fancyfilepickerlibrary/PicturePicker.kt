@@ -26,7 +26,8 @@ class PicturePicker {
     private var activity: Activity? = null
     private var actionBarColor: Int = Color.parseColor("#F44336")
     private var actionBarTitle: String = ""
-    private var chooseType = CHOOSE_TYPE_SINGLE //默认多选
+    private var chooseType = CHOOSE_TYPE_MULTIPLE //默认多选
+    private var existingResults = ArrayList<String>()
 
 
     fun withActivity(activity: Activity): PicturePicker {
@@ -48,6 +49,14 @@ class PicturePicker {
      */
     fun requestCode(requestCode: Int): PicturePicker {
         this.requestCode = requestCode
+        return this
+    }
+
+    fun existingResults(results:ArrayList<String>): PicturePicker {
+        this.existingResults.clear()
+        if (!results.isEmpty()) {
+           this.existingResults.addAll(results)
+        }
         return this
     }
 
@@ -80,6 +89,7 @@ class PicturePicker {
         intent.putExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
         intent.putExtra(Utils.ACTION_BAR_TITLE_KEY, actionBarTitle)
         intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)
+        intent.putExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY, existingResults)
         activity?.startActivityForResult(intent, requestCode)
     }
 }
