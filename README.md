@@ -103,7 +103,7 @@ FilePicker()
 ```java
 new FilePicker().withActivity(this)
                 .requestCode(0)
-                .chooseType(FilePicker.Companion.getCHOOSE_TYPE_SINGLE())
+                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE())
                 .start();
 ```
 
