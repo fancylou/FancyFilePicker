@@ -19,6 +19,24 @@ inline fun <reified T : Activity> Activity.startWithRequestCode(requestCode: Int
     startActivityForResult(intent, requestCode)
 }
 
+/**
+ * make the window normal
+ */
+fun  Activity.lightOn() {
+    val lp = window.attributes
+    lp.alpha = 1.0f
+    window.attributes = lp
+}
+
+/**
+ * make the window more dark
+ */
+fun Activity.lightOff() {
+    val lp = window.attributes
+    lp.alpha = 0.3f
+    window.attributes = lp
+}
+
 
 fun ViewGroup.inflate(layout: Int) : View {
     return LayoutInflater.from(context).inflate(layout, this, false)

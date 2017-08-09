@@ -4,16 +4,14 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
+import android.util.Log
+import android.view.*
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_file_classification_picker.*
 import kotlinx.android.synthetic.main.breadcrumbs.*
 import kotlinx.android.synthetic.main.toolbar.*
@@ -25,17 +23,16 @@ import net.muliba.fancyfilepickerlibrary.ext.concat
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.model.Classification
 import net.muliba.fancyfilepickerlibrary.model.DataSource
-import net.muliba.fancyfilepickerlibrary.util.ImageLoader
-import net.muliba.fancyfilepickerlibrary.util.TransparentItemDecoration
-import net.muliba.fancyfilepickerlibrary.util.Utils
+import net.muliba.fancyfilepickerlibrary.util.*
 import net.muliba.fancyfilepickerlibrary.util.Utils.formatTime
-import net.muliba.fancyfilepickerlibrary.util.fileIcon
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
 
 class FileClassificationPickerActivity : AppCompatActivity(), FileClassificationUIView {
 
     private var chooseType = FilePicker.CHOOSE_TYPE_MULTIPLE
     private val mSelected = HashSet<String>()
+    private val mDocumentTypeFilters = HashSet<String>()
     private val mItems = ArrayList<DataSource>()
     private val adapter: FileClassificationAdapter by lazy {
         object : FileClassificationAdapter(mItems) {
@@ -167,6 +164,10 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         toolbar.setNavigationOnClickListener { finish() }
         initAdapter()
         constraint_file_picker_upper_level_button.setOnClickListener { upperLevel() }
+        layout_file_picker_filter_bar.setOnClickListener {
+            //show filter Window
+            showDocumentTypeFilterDialog()
+        }
     }
 
     override fun onResume() {
@@ -212,6 +213,21 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         setupLayoutManager()
         adapter.notifyDataSetChanged()
         refreshBreadcrumbs()
+
+        if (mLevel == 3) {
+            if (mDocumentTypeFilters.isEmpty()) {
+                image_file_picker_filter_bar.setImageResource(R.drawable.ic_filter_off)
+                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(this@FileClassificationPickerActivity, R.color.secondary_text))
+            }else {
+                image_file_picker_filter_bar.setImageResource(R.drawable.ic_filter_on)
+                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(this@FileClassificationPickerActivity, R.color.primary))
+            }
+            layout_file_picker_filter_bar.visibility= View.VISIBLE
+
+        }else {
+            layout_file_picker_filter_bar.visibility= View.GONE
+        }
+
         if (items.size > 0) {
             recycler_file_classification_picker_list.visibility = View.VISIBLE
             file_picker_empty.visibility = View.GONE
@@ -257,7 +273,10 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
     private fun refreshItems() {
         mProgressDialog.show()
-        mPresenter.loadingItems(mLevel, mPictureFolderDir)
+        if (mLevel!=3) {
+            mDocumentTypeFilters.clear()
+        }
+        mPresenter.loadingItems(mLevel, mPictureFolderDir, mDocumentTypeFilters)
     }
 
 
@@ -353,5 +372,55 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
     }
 
 
+    private fun showDocumentTypeFilterDialog() {
+        val builder = alert {
+            title = "筛选"
+            val view = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.popup_picture_folders,null, false)
+            customView(view)
+            positiveButton(R.string.positive){
+                refreshItems()
+            }
+            negativeButton(R.string.cancel)
+        }.show()
+
+        val listView = builder.dialog?.findViewById(R.id.id_dir_list) as ListView
+        listView.adapter = object : ArrayAdapter<DocumentTypeEnum>(this@FileClassificationPickerActivity, 0, DocumentTypeEnum.values()){
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                var view: View? = convertView
+                if(convertView == null) {
+                    view = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.item_document_type_filter_window, parent, false)
+                }
+                val tv = view?.findViewById(R.id.tv_document_type_name) as TextView
+                tv.text = getItem(position).label
+                val check = view?.findViewById(R.id.checkBox_document_type_check) as CheckBox
+                check.isChecked = false
+                mDocumentTypeFilters.filter { it.equals(getItem(position).value) }.map {
+                    check.isChecked = true
+                }
+                check.setOnClickListener {
+                    val isCheck = check.isChecked
+                    toggleDocumentType(isCheck, getItem(position).value)
+                }
+
+                return view!!
+            }
+        }
+//        listView.setOnItemClickListener { parent, view, position, id ->
+//            Log.i("PICKER", "click item $position")
+//            val check = view.findViewById(R.id.checkBox_document_type_check) as CheckBox
+//            val isCheck = check.isChecked
+//            check.isChecked = !isCheck
+//            toggleDocumentType(!isCheck, DocumentTypeEnum.values()[position].value)
+//        }
+    }
+
+    private fun toggleDocumentType(check: Boolean, value: String) {
+        Log.i("PICKER", "toggleDocumenttype $check, value:$value")
+        if (check) {
+            mDocumentTypeFilters.add(value)
+        }else {
+            mDocumentTypeFilters.remove(value)
+        }
+    }
 
 }

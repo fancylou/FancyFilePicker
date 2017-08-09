@@ -19,6 +19,8 @@ import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.muliba.fancyfilepickerlibrary.R
 import net.muliba.fancyfilepickerlibrary.adapter.FileViewHolder
 import net.muliba.fancyfilepickerlibrary.adapter.PictureAdapter
+import net.muliba.fancyfilepickerlibrary.ext.lightOff
+import net.muliba.fancyfilepickerlibrary.ext.lightOn
 import net.muliba.fancyfilepickerlibrary.model.DataSource
 import net.muliba.fancyfilepickerlibrary.ui.view.ListImageDirPopupWindow
 import net.muliba.fancyfilepickerlibrary.util.ImageLoader
@@ -180,18 +182,5 @@ class PictureChooseActivity : AppCompatActivity(), PictureChooseContract.View {
     }
 
 
-    /**
-     * 关闭popupWindow后内容区域变亮
-     */
-    private fun lightOn() {
-        val lp = window.attributes
-        lp.alpha = 1.0f
-        window.attributes = lp
-    }
 
-    private fun lightOff() {
-        val lp = window.attributes
-        lp.alpha = 0.3f
-        window.attributes = lp
-    }
 }
