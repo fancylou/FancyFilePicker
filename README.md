@@ -1,4 +1,5 @@
 # FancyFilePicker
+[![](https://jitpack.io/v/fancylou/FancyFilePicker.svg)](https://jitpack.io/#fancylou/FancyFilePicker/v2.1.3)
 
 使用Kotlin写的一个Android文件选择器，轻便，漂亮，尽量遵循Material Design
 
