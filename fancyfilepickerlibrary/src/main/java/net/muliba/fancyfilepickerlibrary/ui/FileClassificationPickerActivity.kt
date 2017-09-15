@@ -373,8 +373,9 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
 
     private fun showDocumentTypeFilterDialog() {
+        val alertTitle = getString(R.string.filter_label)
         val builder = alert {
-            title = "筛选"
+            title = alertTitle
             val view = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.popup_picture_folders,null, false)
             customView(view)
             positiveButton(R.string.positive){
@@ -385,37 +386,31 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
         val listView = builder.dialog?.findViewById(R.id.id_dir_list) as ListView
         listView.adapter = object : ArrayAdapter<DocumentTypeEnum>(this@FileClassificationPickerActivity, 0, DocumentTypeEnum.values()){
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
                 var view: View? = convertView
-                if(convertView == null) {
+                if(view == null) {
                     view = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.item_document_type_filter_window, parent, false)
                 }
-                val tv = view?.findViewById(R.id.tv_document_type_name) as TextView
-                tv.text = getItem(position).label
-                val check = view?.findViewById(R.id.checkBox_document_type_check) as CheckBox
-                check.isChecked = false
-                mDocumentTypeFilters.filter { it.equals(getItem(position).value) }.map {
-                    check.isChecked = true
+                if(view!=null) {
+                    val tv = view.findViewById(R.id.tv_document_type_name) as TextView
+                    tv.text = getItem(position).label
+                    val check = view.findViewById(R.id.checkBox_document_type_check) as CheckBox
+                    check.isChecked = false
+                    mDocumentTypeFilters.filter { it.equals(getItem(position).value) }.map {
+                        check.isChecked = true
+                    }
+                    check.setOnClickListener {
+                        val isCheck = check.isChecked
+                        toggleDocumentType(isCheck, getItem(position).value)
+                    }
                 }
-                check.setOnClickListener {
-                    val isCheck = check.isChecked
-                    toggleDocumentType(isCheck, getItem(position).value)
-                }
-
-                return view!!
+                return view
             }
         }
-//        listView.setOnItemClickListener { parent, view, position, id ->
-//            Log.i("PICKER", "click item $position")
-//            val check = view.findViewById(R.id.checkBox_document_type_check) as CheckBox
-//            val isCheck = check.isChecked
-//            check.isChecked = !isCheck
-//            toggleDocumentType(!isCheck, DocumentTypeEnum.values()[position].value)
-//        }
     }
 
     private fun toggleDocumentType(check: Boolean, value: String) {
-        Log.i("PICKER", "toggleDocumenttype $check, value:$value")
+        Log.i("PICKER", "toggleDocumentType $check, value:$value")
         if (check) {
             mDocumentTypeFilters.add(value)
         }else {

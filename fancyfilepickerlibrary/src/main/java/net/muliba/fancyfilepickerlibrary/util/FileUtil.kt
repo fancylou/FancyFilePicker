@@ -33,7 +33,6 @@ fun fileIcon(extension: String) : Int {
         "rtf" -> R.drawable.ic_file_rtf_48dp
         "txt" -> R.drawable.ic_file_txt_48dp
         "vsd" -> R.drawable.ic_file_visio_48dp
-        "xml" -> R.drawable.ic_file_xml_48dp
         "zip","gzip" -> R.drawable.ic_file_zip_48dp
         "rar","7z","tar" -> R.drawable.ic_file_attachment_48dp
         else -> R.drawable.ic_file_unknown_48dp

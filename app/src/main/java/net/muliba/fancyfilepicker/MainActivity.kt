@@ -37,12 +37,12 @@ class MainActivity : AppCompatActivity() {
         }
         buttonClip.setOnClickListener {
             PicturePicker().withActivity(this)
+                    .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
                     .requestCode(PICTURE_PICKER_SINGLE_REQUEST_CODE)
                     .start()
         }
         buttonMultiChoose.setOnClickListener {
             PicturePicker().withActivity(this)
-                    .chooseType(PicturePicker.CHOOSE_TYPE_MULTIPLE)
                     .requestCode(PICTURE_PICKER_REQUEST_CODE)
                     .start()
         }

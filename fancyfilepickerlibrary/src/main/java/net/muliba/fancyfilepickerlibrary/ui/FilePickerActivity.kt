@@ -131,7 +131,7 @@ class FilePickerActivity : AppCompatActivity() {
                         }
                         //checkbox click
                         checkbox.setOnClickListener {
-                            var check = checkbox.isChecked
+                            val check = checkbox.isChecked
                             toggleItem(file.absolutePath, check)
                         }
                     }
@@ -139,9 +139,9 @@ class FilePickerActivity : AppCompatActivity() {
                         if (chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
                             chooseFileSingle(file.absolutePath)
                         }else{
-                            val checkbox = v.findViewById(R.id.checkBox_file_picker_file) as CheckBox
-                            var check = checkbox.isChecked
-                            checkbox.isChecked = !check
+                            val filePickerCheckbox = v.findViewById(R.id.checkBox_file_picker_file) as CheckBox
+                            val check = filePickerCheckbox.isChecked
+                            filePickerCheckbox.isChecked = !check
                             toggleItem(file.absolutePath, !check)
                         }
                     }

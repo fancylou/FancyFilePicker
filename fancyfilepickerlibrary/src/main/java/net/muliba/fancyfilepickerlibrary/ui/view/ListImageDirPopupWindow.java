@@ -1,7 +1,6 @@
 package net.muliba.fancyfilepickerlibrary.ui.view;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -56,7 +55,7 @@ public class ListImageDirPopupWindow extends PopupWindow {
         setFocusable(true);
         setTouchable(true);
         setOutsideTouchable(true);
-        setBackgroundDrawable(new BitmapDrawable());
+//        setBackgroundDrawable(new BitmapDrawable());
         setTouchInterceptor(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

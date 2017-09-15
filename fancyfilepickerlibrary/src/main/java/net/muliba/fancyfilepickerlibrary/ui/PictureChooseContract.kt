@@ -24,17 +24,19 @@ object PictureChooseContract {
         fun loadPictures(mCurrentDir: File?)
     }
 }
-typealias  MyFileFileter = (File, String) -> Boolean
+
+//typealias  MyFileFileter = (File, String) -> Boolean
+
 class PictureChoosePresenter(val view: PictureChooseContract.View): PictureChooseContract.Presenter {
 
-    val filter: MyFileFileter = {_, filename ->
-        if (filename.endsWith(".jpeg") ||
-                filename.endsWith(".png") ||
-                filename.endsWith("jpg")) {
-            true
-        }
-        false
-    }
+//    val filter: MyFileFileter = {_, filename ->
+//        if (filename.endsWith(".jpeg") ||
+//                filename.endsWith(".png") ||
+//                filename.endsWith("jpg")) {
+//            true
+//        }
+//        false
+//    }
 
     override fun firstInit() {
         doAsync {
@@ -97,8 +99,4 @@ class PictureChoosePresenter(val view: PictureChooseContract.View): PictureChoos
             uiThread { view.refreshPictureList(pictures) }
         }
     }
-
-
-
-
 }
