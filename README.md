@@ -3,19 +3,19 @@
 
 使用Kotlin写的一个Android文件选择器，轻便，漂亮，尽量遵循Material Design
 
-![](http://muliba.u.qiniudn.com/blog/post/filePicker1.2.0-1.jpeg?imageMogr2/auto-orient/thumbnail/720x/blur/1x0/quality/75|imageslim)
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/filePicker1.2.0-1.jpeg)
 
 自定义标题和背景色：
 
-![](http://muliba.u.qiniudn.com/blog/post/filePicker1.2.0-2.jpeg?imageMogr2/auto-orient/thumbnail/720x/blur/1x0/quality/75|imageslim)
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/filePicker1.2.0-2.jpeg)
 
 单选：
 
-![](http://muliba.u.qiniudn.com/blog/post/filePicker1.2.0-3.jpeg?imageMogr2/auto-orient/thumbnail/720x/blur/1x0/quality/75|imageslim)
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/filePicker1.2.0-3.jpeg)
 
 分类模式：
 
-![](http://muliba.u.qiniudn.com/blog/post/FilePicker_2.0.0.jpg)
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FilePicker_2.0.0.jpg)
 
 
 
@@ -25,7 +25,7 @@
 
 ```groovy
 dependencies {
-	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:2.0.0'
+	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:2.1.3'
 }
 ```
 
