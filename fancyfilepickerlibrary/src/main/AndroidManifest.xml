@@ -12,11 +12,11 @@
         <activity
             android:name=".ui.FileClassificationPickerActivity"
             android:theme="@style/FancyAppTheme" />
-        <activity
-            android:name=".ui.ImageClipActivity"
-            android:theme="@style/FancyAppTheme"/>
+
         <activity
             android:name=".ui.PictureChooseActivity"
+            android:theme="@style/FancyAppTheme" />
+        <activity android:name=".ui.PictureLoaderActivity"
             android:theme="@style/FancyAppTheme"></activity>
     </application>
 

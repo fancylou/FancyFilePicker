@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.support.annotation.ColorInt
-import net.muliba.fancyfilepickerlibrary.ui.PictureChooseActivity
+import net.muliba.fancyfilepickerlibrary.ui.PictureLoaderActivity
 import net.muliba.fancyfilepickerlibrary.util.Utils
 
 /**
@@ -85,7 +85,7 @@ class PicturePicker {
         if (activity == null) {
             throw RuntimeException("not found Activity, Please execute the function 'withActivity' ")
         }
-        val intent = Intent(activity, PictureChooseActivity::class.java)
+        val intent = Intent(activity, PictureLoaderActivity::class.java)
         intent.putExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
         intent.putExtra(Utils.ACTION_BAR_TITLE_KEY, actionBarTitle)
         intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)

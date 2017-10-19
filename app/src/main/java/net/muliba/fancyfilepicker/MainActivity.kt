@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.muliba.fancyfilepickerlibrary.PicturePicker
+import net.muliba.fancyfilepickerlibrary.ui.PictureLoaderActivity
 import org.jetbrains.anko.toast
 
 
@@ -65,6 +66,10 @@ class MainActivity : AppCompatActivity() {
 //                    .existingResults(arrayListOf("/storage/emulated/0/DCIM/Camera/IMG_20170805_143117.jpg","/storage/emulated/0/DCIM/Camera/IMG_20170805_142052.jpg"))
 //                    .requestCode(PICTURE_PICKER_REQUEST_CODE)
 //                    .start()
+        }
+        buttonPictureLoader.setOnClickListener {
+//            val intent = Intent(this@MainActivity, PictureLoaderActivity::class.java)
+//            this@MainActivity.startActivity(intent)
         }
     }
 

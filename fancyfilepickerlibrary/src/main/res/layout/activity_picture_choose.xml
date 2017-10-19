@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="net.muliba.fancyfilepickerlibrary.ui.PictureChooseActivity">
+    android:orientation="vertical">
     <include layout="@layout/toolbar" />
 
     <FrameLayout
@@ -48,7 +45,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="3dp"
                     android:layout_toRightOf="@id/dirNameTV"/>
-
             </RelativeLayout>
 
             <android.support.v7.widget.AppCompatButton
@@ -62,7 +58,6 @@
                 android:textAlignment="center"
                 android:text="@string/picker"
                 android:textColor="@android:color/white" />
-
         </RelativeLayout>
     </FrameLayout>
 </LinearLayout>
