@@ -33,9 +33,7 @@ class MainActivity : AppCompatActivity() {
         buttonSingle.setOnClickListener {
             gotoSingleFilePicker()
         }
-        buttonClassificationMode.setOnClickListener {
-            gotoClassificationModeFilePicker()
-        }
+
         buttonClip.setOnClickListener {
             PicturePicker().withActivity(this)
                     .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
@@ -51,12 +49,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, JavaMainActivity::class.java)
             startActivity(intent)
         }
-
-
         button2.setOnClickListener {
             FilePicker().withActivity(this)
                     .chooseType(FilePicker.CHOOSE_TYPE_MULTIPLE)
-                    .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION)
                     .existingResults(arrayListOf("/storage/emulated/0/DCIM/Camera/IMG_20170805_143117.jpg","/storage/emulated/0/DCIM/Camera/IMG_20170805_142052.jpg",
                             "/storage/emulated/0/DCIM/Camera/VID_20170805_200227.mp4"))
                     .requestCode(FILE_PICKER_REQUEST_CODE)
@@ -66,10 +61,6 @@ class MainActivity : AppCompatActivity() {
 //                    .existingResults(arrayListOf("/storage/emulated/0/DCIM/Camera/IMG_20170805_143117.jpg","/storage/emulated/0/DCIM/Camera/IMG_20170805_142052.jpg"))
 //                    .requestCode(PICTURE_PICKER_REQUEST_CODE)
 //                    .start()
-        }
-        buttonPictureLoader.setOnClickListener {
-//            val intent = Intent(this@MainActivity, PictureLoaderActivity::class.java)
-//            this@MainActivity.startActivity(intent)
         }
     }
 
@@ -142,8 +133,6 @@ class MainActivity : AppCompatActivity() {
     private fun gotoFilePicker() {
         FilePicker()
                 .withActivity(this)
-                .title("自定义标题")
-                .actionBarColor(ContextCompat.getColor(this, R.color.colorAccent))
                 .requestCode(FILE_PICKER_REQUEST_CODE)
                 .start()
     }
@@ -156,13 +145,6 @@ class MainActivity : AppCompatActivity() {
                 .start()
     }
 
-    private fun gotoClassificationModeFilePicker() {
-        FilePicker()
-                .withActivity(this)
-                .requestCode(FILE_PICKER_REQUEST_CODE)
-                .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION)
-                .start()
-    }
     /**
      * 请求写入权限
      */

@@ -1,20 +1,18 @@
-package net.muliba.fancyfilepickerlibrary.ui
+package net.muliba.fancyfilepickerlibrary.ui.fragment
 
-import android.app.Activity
 import android.app.ProgressDialog
-import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.text.TextUtils
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import kotlinx.android.synthetic.main.activity_file_classification_picker.*
 import kotlinx.android.synthetic.main.breadcrumbs.*
-import kotlinx.android.synthetic.main.toolbar.*
+import kotlinx.android.synthetic.main.fragment_file_classification_picker.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.muliba.fancyfilepickerlibrary.R
 import net.muliba.fancyfilepickerlibrary.adapter.FileClassificationAdapter
@@ -23,15 +21,20 @@ import net.muliba.fancyfilepickerlibrary.ext.concat
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.model.Classification
 import net.muliba.fancyfilepickerlibrary.model.DataSource
+import net.muliba.fancyfilepickerlibrary.ui.FileActivity
+import net.muliba.fancyfilepickerlibrary.ui.FileClassificationPresenter
+import net.muliba.fancyfilepickerlibrary.ui.FileClassificationUIView
 import net.muliba.fancyfilepickerlibrary.util.*
-import net.muliba.fancyfilepickerlibrary.util.Utils.formatTime
 import org.jetbrains.anko.alert
-import org.jetbrains.anko.toast
 
-class FileClassificationPickerActivity : AppCompatActivity(), FileClassificationUIView {
+/**
+ * Created by fancylou on 10/23/17.
+ */
 
-    private var chooseType = FilePicker.CHOOSE_TYPE_MULTIPLE
-    private val mSelected = HashSet<String>()
+
+class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
+
+    var mActivity: FileActivity? = null
     private val mDocumentTypeFilters = HashSet<String>()
     private val mItems = ArrayList<DataSource>()
     private val adapter: FileClassificationAdapter by lazy {
@@ -53,33 +56,33 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             override fun bindFile(holder: FileViewHolder, file: DataSource.File, position: Int) {
                 holder.setImageByResource(R.id.image_item_classification_picker_file_icon, fileIcon(file.file.extension))
                         .setText(R.id.tv_item_classification_picker_file_name, file.file.name)
-                        .setText(R.id.tv_item_classification_picker_file_time, formatTime(file.file.lastModified()))
+                        .setText(R.id.tv_item_classification_picker_file_time, Utils.formatTime(file.file.lastModified()))
                         .setText(R.id.tv_item_classification_picker_file_size, file.file.length().friendlyFileLength())
                 val checkbox = holder.getView<CheckBox>(R.id.checkBox_item_classification_picker_file)
-                if (chooseType == FilePicker.CHOOSE_TYPE_SINGLE) {
+                if (mActivity?.chooseType == FilePicker.CHOOSE_TYPE_SINGLE) {
                     checkbox.visibility = View.GONE
                 }else {
                     checkbox.visibility = View.VISIBLE
                     checkbox.isChecked = false
-                    if (mSelected.contains(file.path)){
+                    if (mActivity?.mSelected?.contains(file.path)?: false){
                         checkbox.isChecked = true
                     }
                     //checkbox click
                     checkbox.setOnClickListener {
                         var check = checkbox.isChecked
-                        toggleItem(file.path, check)
+                        mActivity?.toggleChooseFile(file.path, check)
                     }
                 }
             }
 
             override fun clickFile(v: View, file: DataSource.File, position: Int) {
-                if (chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
-                    chooseFileSingle(file.path)
+                if (mActivity?.chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
+                    mActivity?.chooseFileSingle(file.path)
                 }else{
                     val checkbox = v.findViewById(R.id.checkBox_item_classification_picker_file) as CheckBox
                     var check = checkbox.isChecked
                     checkbox.isChecked = !check
-                    toggleItem(file.path, !check)
+                    mActivity?.toggleChooseFile(file.path, !check)
                 }
             }
 
@@ -103,65 +106,56 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
                 image.setImageResource(R.drawable.ic_file_image_48dp)
                 ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(picture.path, image)
                 val checkbox = holder.getView<CheckBox>(R.id.checkBox_item_classification_picture)
-                if (chooseType == FilePicker.CHOOSE_TYPE_SINGLE) {
+                if (mActivity?.chooseType == FilePicker.CHOOSE_TYPE_SINGLE) {
                     checkbox.visibility = View.GONE
                 }else {
                     checkbox.visibility = View.VISIBLE
                     checkbox.isChecked = false
-                    if (mSelected.contains(picture.path)){
+                    if (mActivity?.mSelected?.contains(picture.path)?:false){
                         checkbox.isChecked = true
                     }
                     //checkbox click
                     checkbox.setOnClickListener {
                         var check = checkbox.isChecked
-                        toggleItem(picture.path, check)
+                        mActivity?.toggleChooseFile(picture.path, check)
                     }
                 }
             }
 
             override fun clickPicture(v: View, picture: DataSource.Picture, position: Int) {
-                if (chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
-                    chooseFileSingle(picture.path)
+                if (mActivity?.chooseType ==  FilePicker.CHOOSE_TYPE_SINGLE){
+                    mActivity?.chooseFileSingle(picture.path)
                 }else{
                     val checkbox = v.findViewById(R.id.checkBox_item_classification_picture) as CheckBox
                     var check = checkbox.isChecked
                     checkbox.isChecked = !check
-                    toggleItem(picture.path, !check)
+                    mActivity?.toggleChooseFile(picture.path, !check)
                 }
             }
         }
     }
-    private val mPresenter: FileClassificationPresenter = FileClassificationPresenter(this, this@FileClassificationPickerActivity)
-    private val mProgressDialog: ProgressDialog by lazy { ProgressDialog(this) }
+    private val mPresenter: FileClassificationPresenter by lazy { FileClassificationPresenter(this, activity) }
+    private val mProgressDialog: ProgressDialog by lazy { ProgressDialog(activity) }
 
-    private val mItemDecoration by lazy { TransparentItemDecoration(this@FileClassificationPickerActivity, LinearLayoutManager.VERTICAL) }
+    private val mItemDecoration by lazy { TransparentItemDecoration(activity, LinearLayoutManager.VERTICAL) }
     /*状态*/
     private var mLevel = -1 //所处的位置
     private var mPictureFolderName = ""
     private var mPictureFolderId = ""
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (activity != null) {
+            mActivity = (activity as FileActivity)
+        }
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_file_classification_picker)
-        //获取数据
-        var actionBarColor = intent.getIntExtra(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, Color.parseColor("#F44336"))
-        var actionBarTitle = intent.getStringExtra(Utils.ACTION_BAR_TITLE_KEY)
-        chooseType = intent.getIntExtra(Utils.CHOOSE_TYPE_KEY, FilePicker.CHOOSE_TYPE_MULTIPLE)
-        val mBackResults = intent.getStringArrayListExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY) ?: ArrayList<String>()
-        if (!mBackResults.isEmpty()) {
-            mBackResults.map {
-                mSelected.add(it)
-            }
-        }
-        if (TextUtils.isEmpty(actionBarTitle)) {
-            actionBarTitle = getString(R.string.title_activity_file_picker)
-        }
-        toolbar.title = actionBarTitle
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp)
-        toolbar.setBackgroundColor(actionBarColor)
-        toolbar.setNavigationOnClickListener { finish() }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater?.inflate(R.layout.fragment_file_classification_picker, container, false)
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initAdapter()
         constraint_file_picker_upper_level_button.setOnClickListener { upperLevel() }
         layout_file_picker_filter_bar.setOnClickListener {
@@ -170,41 +164,6 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshItems()
-    }
-
-    override fun onBackPressed() {
-        if (mLevel == -1) {
-            super.onBackPressed()
-        } else {
-            upperLevel()
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        if (chooseType== FilePicker.CHOOSE_TYPE_MULTIPLE){
-            menuInflater.inflate(R.menu.menu_file_picker, menu)
-        }
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (mSelected.size == 0) {
-            menu?.findItem(R.id.menu_choose)?.title = getString(R.string.picker)
-        } else {
-            menu?.findItem(R.id.menu_choose)?.title = getString(R.string.picker) + "(" + mSelected.size.toString() + ")"
-        }
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
-            R.id.menu_choose -> chooseFile()
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun returnItems(items: ArrayList<DataSource>) {
         mProgressDialog.dismiss()
@@ -217,10 +176,10 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         if (mLevel == 3) {
             if (mDocumentTypeFilters.isEmpty()) {
                 image_file_picker_filter_bar.setImageResource(R.drawable.ic_filter_off)
-                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(this@FileClassificationPickerActivity, R.color.secondary_text))
+                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(activity, R.color.secondary_text))
             }else {
                 image_file_picker_filter_bar.setImageResource(R.drawable.ic_filter_on)
-                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(this@FileClassificationPickerActivity, R.color.colorPrimary))
+                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary))
             }
             layout_file_picker_filter_bar.visibility= View.VISIBLE
 
@@ -237,49 +196,14 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         }
     }
 
-    /**
-     * 单选的时候点击返回
-     */
-    private fun chooseFileSingle(filePath: String) {
-        intent.putExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY, filePath)
-        setResult(Activity.RESULT_OK, intent)
-        finish()
-    }
-
-    /**
-     * 多选的时候返回
-     */
-    private fun chooseFile(): Boolean {
-        if (mSelected.size > 0) {
-            val array = ArrayList<String>()
-            mSelected.map { array.add(it) }
-            intent.putStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY, array)
-            setResult(Activity.RESULT_OK, intent)
-            finish()
+    fun onBackPressed(): Boolean {
+        if (mLevel == -1) {
+            return false
         } else {
-            toast(getString(R.string.message_please_select_more_than_one))
+            upperLevel()
+            return true
         }
-        return true
     }
-
-    private fun toggleItem(filePath: String, isChecked: Boolean) {
-        if (isChecked) {
-            mSelected.add(filePath)
-        } else {
-            mSelected.remove(filePath)
-        }
-        refreshMenu()
-    }
-
-    private fun refreshItems() {
-        mProgressDialog.show()
-        if (mLevel!=3) {
-            mDocumentTypeFilters.clear()
-        }
-        mPresenter.loadingItems(mLevel, mPictureFolderId, mDocumentTypeFilters)
-    }
-
-
     private fun upperLevel() {
         when (mLevel) {
             0, 1, 2, 3, 4, 5 -> {
@@ -294,6 +218,18 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         mPictureFolderId = ""
         mPictureFolderName = ""
     }
+
+    /**
+     *
+     */
+    private fun refreshItems() {
+        mProgressDialog.show()
+        if (mLevel!=3) {
+            mDocumentTypeFilters.clear()
+        }
+        mPresenter.loadingItems(mLevel, mPictureFolderId, mDocumentTypeFilters)
+    }
+
 
     private fun refreshBreadcrumbs() {
         when (mLevel) {
@@ -347,25 +283,19 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         }
     }
 
-    private fun refreshMenu() {
-        // getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
-        invalidateOptionsMenu()
-    }
-
     private fun initAdapter() {
         setupLayoutManager()
         recycler_file_classification_picker_list.adapter = adapter
     }
-
     private fun setupLayoutManager() {
         when (mLevel) {
             -1, 6 -> {
-                recycler_file_classification_picker_list.layoutManager = GridLayoutManager(this, 3)
+                recycler_file_classification_picker_list.layoutManager = GridLayoutManager(activity, 3)
                 recycler_file_classification_picker_list.removeItemDecoration(mItemDecoration)
                 recycler_file_classification_picker_list.addItemDecoration(mItemDecoration)
             }
             0, 1, 2, 3, 4, 5 -> {
-                recycler_file_classification_picker_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+                recycler_file_classification_picker_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
                 recycler_file_classification_picker_list.removeItemDecoration(mItemDecoration)
             }
         }
@@ -374,8 +304,8 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
     private fun showDocumentTypeFilterDialog() {
         val alertTitle = getString(R.string.filter_label)
-        val dialog = alert(title = alertTitle, message = "") {
-            customView = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.popup_picture_folders,null, false)
+        val dialog =  activity.alert(title = alertTitle, message = "") {
+            customView = LayoutInflater.from(activity).inflate(R.layout.popup_picture_folders,null, false)
             positiveButton(R.string.positive){
                 refreshItems()
             }
@@ -383,11 +313,11 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
         }.show()
         val listView = dialog?.findViewById(R.id.id_dir_list) as ListView
-        listView.adapter = object : ArrayAdapter<DocumentTypeEnum>(this@FileClassificationPickerActivity, 0, DocumentTypeEnum.values()){
+        listView.adapter = object : ArrayAdapter<DocumentTypeEnum>(activity, 0, DocumentTypeEnum.values()){
             override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
                 var view: View? = convertView
                 if(view == null) {
-                    view = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.item_document_type_filter_window, parent, false)
+                    view = LayoutInflater.from(activity).inflate(R.layout.item_document_type_filter_window, parent, false)
                 }
                 if(view!=null) {
                     val tv = view.findViewById(R.id.tv_document_type_name) as TextView
@@ -415,5 +345,4 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             mDocumentTypeFilters.remove(value)
         }
     }
-
 }

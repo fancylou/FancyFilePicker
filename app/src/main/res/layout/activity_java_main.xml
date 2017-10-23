@@ -10,7 +10,7 @@
         android:id="@+id/btn_java_main_classification_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="分类模式"
+        android:text="选择文件"
         android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="8dp"

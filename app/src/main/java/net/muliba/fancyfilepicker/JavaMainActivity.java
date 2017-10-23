@@ -33,7 +33,6 @@ public class JavaMainActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case  R.id.btn_java_main_classification_mode : {
                 new FilePicker().withActivity(this)
-                        .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION())
                         .chooseType(FilePicker.CHOOSE_TYPE_SINGLE())
                         .requestCode(FILE_PICKER_SINGLE)
                         .start();
