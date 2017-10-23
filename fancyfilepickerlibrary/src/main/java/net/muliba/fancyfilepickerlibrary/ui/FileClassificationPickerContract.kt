@@ -74,39 +74,28 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
     private fun loadPictureFolderItems() {
         doAsync {
             val items = ArrayList<net.muliba.fancyfilepickerlibrary.model.DataSource>()
-            val set = HashSet<String>()
             val uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            val selectStr: String = android.provider.MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + android.provider.MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + android.provider.MediaStore.Images.Media.MIME_TYPE + " = ?"
-            val array = arrayOf("image/jpeg", "image/jpg", "image/png")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, android.provider.MediaStore.Images.Media.DATE_MODIFIED + " DESC ")
+            val PROJECTION = arrayOf(MediaStore.Images.Media.BUCKET_ID,
+                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+                    MediaStore.Images.Media.DATA,
+                    "count(bucket_id) as cou",
+                    MediaStore.Images.Media._ID)
+            val selectStr: String = " _size > ? or _size is null ) GROUP BY  1,(2"
+            val array = arrayOf("0")
+            val query = activity.contentResolver.query(uri,
+                    PROJECTION,
+                    selectStr,
+                    array,
+                    "MAX(datetaken) DESC")
             while (query.moveToNext()) {
+                val bucketId = query.getString(query.getColumnIndex(MediaStore.Images.Media.BUCKET_ID))
+                val bucketName = query.getString(query.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME))
                 val filePath = query.getString(query.getColumnIndex(android.provider.MediaStore.Images.Media.DATA))
-                val parent = java.io.File(filePath).parentFile
-                if (!parent.exists()) {
+                val folderCount = query.getLong(3)
+                if (folderCount < 1) {
                     continue
                 }
-                val parentDir = parent.absolutePath
-                if (set.contains(parentDir)) {
-                    continue
-                }
-                set.add(parentDir)
-                val picSize = parent.list(java.io.FilenameFilter { _, filename ->
-                    if (filename.endsWith(".jpg") ||
-                            filename.endsWith(".jpeg") ||
-                            filename.endsWith(".png")) {
-                        return@FilenameFilter true
-                    }
-                    false
-                }).size
-                if (picSize < 1) {
-                    continue
-                }
-                items.add(net.muliba.fancyfilepickerlibrary.model.DataSource.PictureFolder(parent.name, parentDir, filePath, picSize))
-            }
-            //sort
-            items.sortByDescending {
-                val o = it as net.muliba.fancyfilepickerlibrary.model.DataSource.PictureFolder
-                o.childrenCount
+                items.add(net.muliba.fancyfilepickerlibrary.model.DataSource.PictureFolder(bucketName, bucketId, filePath, folderCount))
             }
             query.close()
             uiThread { mView.returnItems(items) }
@@ -116,19 +105,25 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
     /**
      * 加载某个目录下所有图片
      */
-    private fun loadPictureItems(parentPath: String) {
+    private fun loadPictureItems(bucketId: String) {
         doAsync {
             val items = ArrayList<net.muliba.fancyfilepickerlibrary.model.DataSource>()
-            val list = java.io.File(parentPath).listFiles(java.io.FilenameFilter { _, filename ->
-                if (filename.endsWith(".jpg") ||
-                        filename.endsWith(".jpeg") ||
-                        filename.endsWith(".png")) {
-                    return@FilenameFilter true
-                }
-                false
-            })
-            list.sortByDescending(File::lastModified)
-            items.addAll(list.map { DataSource.Picture(it.absolutePath) })
+            val PROJECTION = arrayOf(MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.DISPLAY_NAME,
+                    MediaStore.Images.Media.DATA,
+                    MediaStore.Images.Media.DATE_TAKEN)
+            val SELECTION=  "${MediaStore.Images.Media.BUCKET_ID}  = ? and ( ${MediaStore.Images.Media.SIZE} > ? or ${MediaStore.Images.Media.SIZE} is null ) "
+            val ORDER_BY = " ${MediaStore.Images.Media.DATE_TAKEN } DESC"
+            val query = activity.contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    PROJECTION,
+                    SELECTION,
+                    arrayOf(bucketId, "0"),
+                    ORDER_BY)
+            while (query.moveToNext()) {
+                val filePath = query.getString(query.getColumnIndex(MediaStore.Images.Media.DATA))
+                items.add(DataSource.Picture(filePath))
+            }
+            query.close()
             uiThread { mView.returnItems(items) }
         }
     }
@@ -144,9 +139,12 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
             val items = ArrayList<DataSource>()
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
             //用MIME_TYPE查不到文件？？？
-//            val selectStr: String = MediaStore.Audio.Media.MIME_TYPE+" = ?"+" or "+ MediaStore.Audio.Media.MIME_TYPE+" = ?"
-//            val array = arrayOf("audio/x-mpeg", "audio/mp3")
-            val query = activity.contentResolver.query(uri, null, null, null, MediaStore.Audio.Media.DATE_MODIFIED + " DESC")
+            val selectStr: String = MediaStore.Audio.Media.SIZE+" > ? "
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Audio.AudioColumns._ID, MediaStore.Audio.AudioColumns.DATA),
+                    selectStr,
+                    arrayOf("0"),
+                    MediaStore.Audio.Media.DATE_MODIFIED + " DESC")
             while (query.moveToNext()) {
                 val path = query.getString(query.getColumnIndex(MediaStore.Audio.AudioColumns.DATA))
                 val file = File(path)
@@ -168,9 +166,12 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
         doAsync {
             val items = ArrayList<DataSource>()
             val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            val selectStr: String = MediaStore.Video.Media.MIME_TYPE + " = ?" + " or " + MediaStore.Video.Media.MIME_TYPE + " = ?"
-            val array = arrayOf("video/mp4", "video/x-matroska")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Video.Media.DATE_MODIFIED + " DESC")
+            val selectStr: String = MediaStore.Video.Media.SIZE + " > ?"
+            val array = arrayOf("0")
+            val query = activity.contentResolver.query(uri, arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.DATA),
+                    selectStr,
+                    array,
+                    MediaStore.Video.Media.DATE_MODIFIED + " DESC")
             while (query.moveToNext()) {
                 val path = query.getString(query.getColumnIndex(MediaStore.Video.Media.DATA))
                 val file = File(path)
@@ -210,7 +211,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
             Log.i("loadDocumentItems", "selectStr:$selectStr")
             val array = queryList.toTypedArray()
             Log.i("loadDocumentItems", "array:${array.size}")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA),
+                    selectStr,
+                    array,
+                    MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
             while (query.moveToNext()) {
                 val path = query.getString(query.getColumnIndex(MediaStore.Files.FileColumns.DATA))
                 val file = File(path)
@@ -234,7 +239,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
             val uri = MediaStore.Files.getContentUri("external")
             var selectStr: String = MediaStore.Files.FileColumns.MIME_TYPE + " = ?"
             val array = arrayOf("application/zip")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA),
+                    selectStr,
+                    array,
+                    MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
             while (query.moveToNext()) {
                 val path = query.getString(query.getColumnIndex(MediaStore.Files.FileColumns.DATA))
                 val file = File(path)
@@ -258,7 +267,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
             val uri = MediaStore.Files.getContentUri("external")
             var selectStr: String = MediaStore.Files.FileColumns.MIME_TYPE + " = ?"
             val array = arrayOf("application/vnd.android.package-archive")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA),
+                    selectStr,
+                    array,
+                    MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
             while (query.moveToNext()) {
                 val path = query.getString(query.getColumnIndex(MediaStore.Files.FileColumns.DATA))
                 val file = File(path)
@@ -279,9 +292,14 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
     private fun countPictures(countTv: TextView) {
         doAsync {
             val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            val selectStr: String = MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + MediaStore.Images.Media.MIME_TYPE + " = ?" + " or " + MediaStore.Images.Media.MIME_TYPE + " = ?"
-            val array = arrayOf("image/jpeg", "image/jpg", "image/png")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Images.Media.DATE_MODIFIED + " DESC ")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Images.Media._ID,
+                            MediaStore.Images.Media.DISPLAY_NAME,
+                            MediaStore.Images.Media.DATA,
+                            MediaStore.Images.Media.DATE_TAKEN),
+                    "${MediaStore.Images.Media.SIZE} > ? or ${MediaStore.Images.Media.SIZE} is null",
+                    arrayOf("0"),
+                    null)
             val count = query.count
             query.close()
             uiThread {
@@ -298,10 +316,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
     private fun countAudio(countTv: TextView) {
         doAsync {
             val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-            //用MIME_TYPE查不到文件？？？
-//            val selectStr: String = MediaStore.Audio.Media.MIME_TYPE+" = ?"+" or "+ MediaStore.Audio.Media.MIME_TYPE+" = ?"
-//            val array = arrayOf("audio/x-mpeg", "audio/mp3")
-            val query = activity.contentResolver.query(uri, null, null, null, MediaStore.Audio.Media.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA),
+                    MediaStore.Audio.Media.SIZE+" > ? ",
+                    arrayOf("0"),
+                    null)
             val count = query.count
             query.close()
             uiThread {
@@ -318,9 +337,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
     private fun countVideo(countTv: TextView) {
         doAsync {
             val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-            val selectStr: String = MediaStore.Video.Media.MIME_TYPE + " = ?" + " or " + MediaStore.Video.Media.MIME_TYPE + " = ?"
-            val array = arrayOf("video/mp4", "video/x-matroska")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Video.Media.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Video.Media._ID, MediaStore.Video.Media.DATA),
+                    "${MediaStore.Video.Media.SIZE} > ? ",
+                    arrayOf("0"),
+                    null)
             val count = query.count
             query.close()
             uiThread {
@@ -345,7 +366,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
                     .concat(" or " + MediaStore.Files.FileColumns.MIME_TYPE + " = ?")
 
             val array = arrayOf("text/plain", "text/xml", "application/msword", "application/pdf", "application/vnd.ms-powerpoint", "application/vnd.ms-excel")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA),
+                    selectStr,
+                    array,
+                    null)
             val count = query.count
             query.close()
             uiThread {
@@ -364,7 +389,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
             val uri = MediaStore.Files.getContentUri("external")
             var selectStr: String = MediaStore.Files.FileColumns.MIME_TYPE + " = ?"
             val array = arrayOf("application/zip")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA),
+                    selectStr,
+                    array,
+                    null)
             val count = query.count
             query.close()
             uiThread {
@@ -383,7 +412,11 @@ class FileClassificationPresenter(val mView: net.muliba.fancyfilepickerlibrary.u
             val uri = MediaStore.Files.getContentUri("external")
             var selectStr: String = MediaStore.Files.FileColumns.MIME_TYPE + " = ?"
             val array = arrayOf("application/vnd.android.package-archive")
-            val query = activity.contentResolver.query(uri, null, selectStr, array, MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC")
+            val query = activity.contentResolver.query(uri,
+                    arrayOf(MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA),
+                    selectStr,
+                    array,
+                    null)
             val count = query.count
             query.close()
             uiThread {

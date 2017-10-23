@@ -93,7 +93,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
             override fun clickPictureFolder(v: View, folder: DataSource.PictureFolder, position: Int) {
                 mLevel = 6
-                mPictureFolderDir = folder.dir
+                mPictureFolderId = folder.bucketId
                 mPictureFolderName = folder.name
                 refreshItems()
             }
@@ -138,7 +138,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
     /*状态*/
     private var mLevel = -1 //所处的位置
     private var mPictureFolderName = ""
-    private var mPictureFolderDir = ""
+    private var mPictureFolderId = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -276,7 +276,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
         if (mLevel!=3) {
             mDocumentTypeFilters.clear()
         }
-        mPresenter.loadingItems(mLevel, mPictureFolderDir, mDocumentTypeFilters)
+        mPresenter.loadingItems(mLevel, mPictureFolderId, mDocumentTypeFilters)
     }
 
 
@@ -291,7 +291,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
                 refreshItems()
             }
         }
-        mPictureFolderDir = ""
+        mPictureFolderId = ""
         mPictureFolderName = ""
     }
 
@@ -374,17 +374,15 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
     private fun showDocumentTypeFilterDialog() {
         val alertTitle = getString(R.string.filter_label)
-        val builder = alert {
-            title = alertTitle
-            val view = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.popup_picture_folders,null, false)
-            customView(view)
+        val dialog = alert(title = alertTitle, message = "") {
+            customView = LayoutInflater.from(this@FileClassificationPickerActivity).inflate(R.layout.popup_picture_folders,null, false)
             positiveButton(R.string.positive){
                 refreshItems()
             }
-            negativeButton(R.string.cancel)
+            negativeButton(R.string.cancel) {
+            }
         }.show()
-
-        val listView = builder.dialog?.findViewById(R.id.id_dir_list) as ListView
+        val listView = dialog?.findViewById(R.id.id_dir_list) as ListView
         listView.adapter = object : ArrayAdapter<DocumentTypeEnum>(this@FileClassificationPickerActivity, 0, DocumentTypeEnum.values()){
             override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
                 var view: View? = convertView

@@ -67,7 +67,6 @@ abstract class PictureCursorRecyclerViewAdapter: RecyclerView.Adapter<FileViewHo
         }
     }
 
-
     private fun swapCursor(newCursor: Cursor?): Cursor? {
         if (newCursor == mCursor) {
             return null
@@ -89,9 +88,7 @@ abstract class PictureCursorRecyclerViewAdapter: RecyclerView.Adapter<FileViewHo
             mDataValid = false
             notifyDataSetChanged()
         }
-
         return old
-
     }
 
     abstract fun bindView(holder: FileViewHolder, cursor: Cursor?)

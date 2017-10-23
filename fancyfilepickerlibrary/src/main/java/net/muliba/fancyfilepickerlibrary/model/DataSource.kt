@@ -14,9 +14,9 @@ sealed class DataSource {
                var file: java.io.File) : DataSource()
 
     class PictureFolder(var name: String,
-                        var dir: String,
+                        var bucketId: String,
                         var firstImagePath: String,
-                        var childrenCount: Int) : DataSource()
+                        var childrenCount: Long) : DataSource()
 
     class Picture(var path: String) : DataSource()
 
