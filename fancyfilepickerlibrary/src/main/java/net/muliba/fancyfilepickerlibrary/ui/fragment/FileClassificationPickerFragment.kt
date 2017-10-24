@@ -162,6 +162,7 @@ class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
             //show filter Window
             showDocumentTypeFilterDialog()
         }
+        refreshItems()
     }
 
 
