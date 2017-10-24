@@ -1,21 +1,23 @@
 # FancyFilePicker
-[![](https://jitpack.io/v/fancylou/FancyFilePicker.svg)](https://jitpack.io/#fancylou/FancyFilePicker/v2.1.3)
+[![](https://jitpack.io/v/fancylou/FancyFilePicker.svg)](https://jitpack.io/#fancylou/FancyFilePicker/v3.0.0)
 
 使用Kotlin写的一个Android文件选择器，轻便，漂亮，尽量遵循Material Design
 
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/filePicker1.2.0-1.jpeg)
+分类：
 
-自定义标题和背景色：
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-classification-3.0.0.jpeg)
 
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/filePicker1.2.0-2.jpeg)
+本地目录：
+
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-local-3.0.0.jpeg)
 
 单选：
 
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/filePicker1.2.0-3.jpeg)
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-single-3.0.0.jpeg)
 
-分类模式：
+图片选择器：
 
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FilePicker_2.0.0.jpg)
+![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-picture-m-3.0.0.jpeg)
 
 
 
@@ -25,7 +27,7 @@
 
 ```groovy
 dependencies {
-	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:2.1.3'
+	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:3.0.0'
 }
 ```
 
@@ -78,26 +80,6 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 }
 ```
 
-分类模式：
-
-```kotlin
-FilePicker()
-                .withActivity(this)
-                .requestCode(FILE_PICKER_REQUEST_CODE)
-                .mode(FilePicker.CHOOSE_MODE_CLASSIFICATION)
-                .start()
-```
-
-自定义标题和颜色：
-
-```
-FilePicker()
-        .withActivity(this)
-        .title("自定义标题")
-        .actionBarColor(ContextCompat.getColor(this, R.color.colorAccent))
-        .requestCode(0)
-        .start()
-```
 
 ### JAVA中使用
 
