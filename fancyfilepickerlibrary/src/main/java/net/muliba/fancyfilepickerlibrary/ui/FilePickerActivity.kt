@@ -19,11 +19,11 @@ import net.muliba.fancyfilepickerlibrary.R
 import net.muliba.fancyfilepickerlibrary.adapter.FileAdapter
 import net.muliba.fancyfilepickerlibrary.adapter.FileViewHolder
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
+import net.muliba.fancyfilepickerlibrary.util.Utils
 import net.muliba.fancyfilepickerlibrary.util.Utils.ACTION_BAR_BACKGROUND_COLOR_KEY
 import net.muliba.fancyfilepickerlibrary.util.Utils.ACTION_BAR_TITLE_KEY
 import net.muliba.fancyfilepickerlibrary.util.Utils.CHOOSE_TYPE_KEY
 import net.muliba.fancyfilepickerlibrary.util.Utils.MULIT_CHOOSE_BACK_RESULTS_KEY
-import net.muliba.fancyfilepickerlibrary.util.fileIcon
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
@@ -114,7 +114,7 @@ class FilePickerActivity : AppCompatActivity() {
                     holder.convertView.setOnClickListener { refreshList(file.absolutePath) }
                 } else {
                     holder.setText(R.id.tv_file_picker_file_name, file.name)
-                            .setImageByResource(R.id.image_file_picker_file, fileIcon(file.extension))
+                            .setImageByResource(R.id.image_file_picker_file, Utils.fileIcon(file.extension))
                     val fileDesc = holder.getView<TextView>(R.id.tv_file_picker_file_description)
                     doAsync {
                         val len = file.length().friendlyFileLength()

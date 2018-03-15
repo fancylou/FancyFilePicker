@@ -84,12 +84,12 @@ task dokkaJavadoc(type: org.gradle.api.tasks.Exec) {
      *
      * dokka-fatjar.jar 这个jar就是从 dokka 项目上下载下来的
      */
-//    commandLine "cmd" , "/c", "java -Djava.ext.dirs=$toolJarPath -jar $dokkaJarPath $sourceDirs -format $outputFormat -output $outputDirectory"
+    commandLine "cmd" , "/c", "java -Djava.ext.dirs=$toolJarPath -jar $dokkaJarPath $sourceDirs -format $outputFormat -output $outputDirectory"
 
     /**
      * 如果你是 Linux 系统, 就用这个
      */
-    commandLine "java -Djava.ext.dirs=$toolJarPath -jar $dokkaJarPath $sourceDirs -format $outputFormat -output $outputDirectory"
+//    commandLine "java -Djava.ext.dirs=$toolJarPath -jar $dokkaJarPath $sourceDirs -format $outputFormat -output $outputDirectory"
 
 }
 

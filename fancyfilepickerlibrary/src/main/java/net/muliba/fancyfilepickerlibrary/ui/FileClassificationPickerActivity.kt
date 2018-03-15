@@ -2,6 +2,7 @@ package net.muliba.fancyfilepickerlibrary.ui
 
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -23,7 +24,11 @@ import net.muliba.fancyfilepickerlibrary.ext.concat
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.model.Classification
 import net.muliba.fancyfilepickerlibrary.model.DataSource
-import net.muliba.fancyfilepickerlibrary.util.*
+import net.muliba.fancyfilepickerlibrary.ui.presenter.FileClassficationActivityPresenter
+import net.muliba.fancyfilepickerlibrary.ui.view.FileClassificationUIView
+import net.muliba.fancyfilepickerlibrary.util.ImageLoader
+import net.muliba.fancyfilepickerlibrary.util.TransparentItemDecoration
+import net.muliba.fancyfilepickerlibrary.util.Utils
 import net.muliba.fancyfilepickerlibrary.util.Utils.formatTime
 import org.jetbrains.anko.alert
 import org.jetbrains.anko.toast
@@ -51,7 +56,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
 
             override fun bindFile(holder: FileViewHolder, file: DataSource.File, position: Int) {
-                holder.setImageByResource(R.id.image_item_classification_picker_file_icon, fileIcon(file.file.extension))
+                holder.setImageByResource(R.id.image_item_classification_picker_file_icon, Utils.fileIcon(file.file.extension))
                         .setText(R.id.tv_item_classification_picker_file_name, file.file.name)
                         .setText(R.id.tv_item_classification_picker_file_time, formatTime(file.file.lastModified()))
                         .setText(R.id.tv_item_classification_picker_file_size, file.file.length().friendlyFileLength())
@@ -131,7 +136,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
         }
     }
-    private val mPresenter: FileClassificationPresenter = FileClassificationPresenter(this, this@FileClassificationPickerActivity)
+    private val mPresenter: FileClassficationActivityPresenter by lazy { FileClassficationActivityPresenter()  }
     private val mProgressDialog: ProgressDialog by lazy { ProgressDialog(this) }
 
     private val mItemDecoration by lazy { TransparentItemDecoration(this@FileClassificationPickerActivity, LinearLayoutManager.VERTICAL) }
@@ -140,6 +145,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
     private var mPictureFolderName = ""
     private var mPictureFolderId = ""
 
+    override fun contextInstance(): Context  = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,6 +188,8 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             upperLevel()
         }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         if (chooseType== FilePicker.CHOOSE_TYPE_MULTIPLE){
@@ -383,7 +391,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
         }.show()
         val listView = dialog?.findViewById(R.id.id_dir_list) as ListView
-        listView.adapter = object : ArrayAdapter<DocumentTypeEnum>(this@FileClassificationPickerActivity, 0, DocumentTypeEnum.values()){
+        listView.adapter = object : ArrayAdapter<String>(this@FileClassificationPickerActivity, 0, Utils.DOCUMENT_TYPE_LABEL_ARRAY){
             override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
                 var view: View? = convertView
                 if(view == null) {
@@ -391,15 +399,17 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
                 }
                 if(view!=null) {
                     val tv = view.findViewById(R.id.tv_document_type_name) as TextView
-                    tv.text = getItem(position).label
+                    val documentType = getItem(position)
+                    val documentMime =Utils.getMimeTypeFromExtension(documentType)
+                    tv.text = documentType
                     val check = view.findViewById(R.id.checkBox_document_type_check) as CheckBox
                     check.isChecked = false
-                    mDocumentTypeFilters.filter { it.equals(getItem(position).value) }.map {
+                    mDocumentTypeFilters.filter { it == documentMime }.map {
                         check.isChecked = true
                     }
                     check.setOnClickListener {
                         val isCheck = check.isChecked
-                        toggleDocumentType(isCheck, getItem(position).value)
+                        toggleDocumentType(isCheck, documentMime)
                     }
                 }
                 return view

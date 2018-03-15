@@ -17,7 +17,7 @@ import net.muliba.fancyfilepickerlibrary.adapter.FileAdapter
 import net.muliba.fancyfilepickerlibrary.adapter.FileViewHolder
 import net.muliba.fancyfilepickerlibrary.ext.friendlyFileLength
 import net.muliba.fancyfilepickerlibrary.ui.FileActivity
-import net.muliba.fancyfilepickerlibrary.util.fileIcon
+import net.muliba.fancyfilepickerlibrary.util.Utils
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
@@ -55,7 +55,7 @@ class FileLocalStoragePickerFragment: Fragment() {
 
 
     fun onBackPressed():Boolean {
-        if (rootPath.equals(currentPath)) {
+        if (rootPath == currentPath) {
             return false
         }else {
             upperLevel()
@@ -69,7 +69,7 @@ class FileLocalStoragePickerFragment: Fragment() {
      * 向上一级
      */
     private fun upperLevel() {
-        if (rootPath.equals(currentPath)) {
+        if (rootPath == currentPath) {
             activity.toast(getString(R.string.message_already_on_top))
         } else {
             refreshList(File(currentPath).parentFile.absolutePath)
@@ -91,7 +91,7 @@ class FileLocalStoragePickerFragment: Fragment() {
                     holder.convertView.setOnClickListener { refreshList(file.absolutePath) }
                 } else {
                     holder.setText(R.id.tv_file_picker_file_name, file.name)
-                            .setImageByResource(R.id.image_file_picker_file, fileIcon(file.extension))
+                            .setImageByResource(R.id.image_file_picker_file, Utils.fileIcon(file.extension))
                     val fileDesc = holder.getView<TextView>(R.id.tv_file_picker_file_description)
                     doAsync {
                         val len = file.length().friendlyFileLength()
@@ -103,7 +103,7 @@ class FileLocalStoragePickerFragment: Fragment() {
                     }else{
                         checkbox.visibility = View.VISIBLE
                         checkbox.isChecked = false
-                        if (mActivity?.mSelected?.contains(file.absolutePath)?:false) {
+                        if (mActivity?.mSelected?.contains(file.absolutePath) == true) {
                             checkbox.isChecked = true
                         }
                         //checkbox click
@@ -157,7 +157,7 @@ class FileLocalStoragePickerFragment: Fragment() {
                     breadcrumbs.visibility = View.VISIBLE
                 }
                 tv_file_picker_folder_path.text = currentPath
-                if (list.size > 0) {
+                if (list.isNotEmpty()) {
                     recycler_file_picker_list.visibility = View.VISIBLE
                     file_picker_empty.visibility = View.GONE
                 } else {

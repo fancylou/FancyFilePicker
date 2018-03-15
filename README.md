@@ -3,21 +3,13 @@
 
 使用Kotlin写的一个Android文件选择器，轻便，漂亮，尽量遵循Material Design
 
-分类：
 
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-classification-3.0.0.jpeg)
 
-本地目录：
+| 分类选择 | 本地目录 | 单选 | 图片选择器 |
+|:--------:|:--------:|:--------:|:--------:|
+|![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-classification-3.0.0.jpeg)| ![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-local-3.0.0.jpeg) | ![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-single-3.0.0.jpeg)| ![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-picture-m-3.0.0.jpeg) |
 
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-local-3.0.0.jpeg)
-
-单选：
-
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-single-3.0.0.jpeg)
-
-图片选择器：
-
-![](https://raw.githubusercontent.com/fancylou/FancyFilePicker/master/screenshots/FancyFilePicker-picture-m-3.0.0.jpeg)
+ 
 
 
 
@@ -94,6 +86,7 @@ new FilePicker().withActivity(this)
 
 ```xml
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 ```
 
 

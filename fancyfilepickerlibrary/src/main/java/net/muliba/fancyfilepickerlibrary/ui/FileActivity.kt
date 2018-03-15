@@ -116,7 +116,7 @@ class FileActivity : AppCompatActivity() {
     /**
      * 多选的时候返回选择的图片结果
      */
-    fun chooseFile(): Boolean {
+    private fun chooseFile(): Boolean {
         if (mSelected.size > 0) {
             val array = ArrayList<String>()
             mSelected.map { array.add(it) }
