@@ -68,7 +68,7 @@ class FilePickerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (rootPath.equals(currentPath)) {
+        if (rootPath == currentPath) {
             super.onBackPressed()
         }else {
             upperLevel()

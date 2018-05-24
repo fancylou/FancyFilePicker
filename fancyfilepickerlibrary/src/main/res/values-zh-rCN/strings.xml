@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">FancyFilePickerLibrary</string>
+    <string name="title_activity_file_picker">文件选择器</string>
+    <string name="title_activity_image_picker">图片选择器</string>
+    <string name="tab_classification">分类</string>
+    <string name="tab_local_storage">本地</string>
+    <string name="picker">选择</string>
+    <string name="clip">裁剪</string>
+    <string name="item_file_name">文件名</string>
+    <string name="item_file_description_default">0 KB</string>
+    <string name="item_file_time_default">2017年4月27日 20:07</string>
+    <string name="item_file_description_label"> KB</string>
+    <string name="item_folder_name">文件夹</string>
+    <string name="item_folder_description_default">0 项</string>
+    <string name="item_folder_description_label"> 项</string>
+    <string name="upper_level">上一级</string>
+    <string name="message_already_on_top">已经在最顶层了！</string>
+    <string name="message_please_select_more_than_one">请至少选择一个文件！</string>
+    <string name="message_please_select_more_than_one_picture">请至少选择一张图片！</string>
+    <string name="empty">没有文件</string>
+    <string name="classification_root">分类</string>
+    <string name="picker_arrow"> > </string>
+    <string name="item_picture_folder_count_default">0 张</string>
+    <string name="item_picture_folder_count_unit">张</string>
+    <string name="item_classification_picture">图片</string>
+    <string name="item_classification_audio">音频</string>
+    <string name="item_classification_video">视频</string>
+    <string name="item_classification_file">文档</string>
+    <string name="item_classification_archive">压缩包</string>
+    <string name="item_classification_application">应用</string>
+    <string name="item_classification_main_count_default">(0)</string>
+    <string name="filter_label">筛选</string>
+    <string name="recent_photo">最近</string>
+    <string name="positive">确定</string>
+    <string name="cancel">取消</string>
+</resources>

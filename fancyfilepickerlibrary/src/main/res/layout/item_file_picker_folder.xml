@@ -25,7 +25,7 @@
         android:text="@string/item_folder_name"
         android:textColor="@color/primary_text"
         android:textSize="@dimen/font_primary"
-        android:maxLines="1"
+        android:singleLine="true"
         android:ellipsize="middle"
         android:layout_marginLeft="8dp"
         app:layout_constraintTop_toTopOf="parent"

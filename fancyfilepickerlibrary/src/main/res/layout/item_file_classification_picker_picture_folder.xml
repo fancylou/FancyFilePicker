@@ -42,7 +42,7 @@
             android:text="@string/item_file_name"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/font_primary"
-            android:maxLines="1"
+            android:singleLine="true"
             android:ellipsize="middle"
             />
         <TextView

@@ -33,7 +33,7 @@ object Utils {
     fun getMimeTypeFromExtension(extension: String): String =  MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase())
 
     fun formatTime(time: Long): String {
-        val format = SimpleDateFormat("yyyy年MM月dd日 HH:mm")
+        val format = SimpleDateFormat("dd MMMM yyyy HH:mm" , Locale.getDefault())
         return format.format(Date(time))
     }
 
