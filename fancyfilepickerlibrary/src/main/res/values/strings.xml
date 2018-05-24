@@ -11,8 +11,8 @@
     <string name="item_file_time_default">4/27/2017 20:07</string>
     <string name="item_file_description_label"> KB</string>
     <string name="item_folder_name">Folder</string>
-    <string name="item_folder_description_default">0 Item</string>
-    <string name="item_folder_description_label"> Items</string>
+    <string name="item_folder_description_default">Item : 0 </string>
+    <string name="item_folder_description_label">Items : %s</string>
     <string name="upper_level">Back</string>
     <string name="message_already_on_top">Already on the top level!</string>
     <string name="message_please_select_more_than_one">Please select at least one file!</string>
@@ -20,8 +20,8 @@
     <string name="empty">Empty</string>
     <string name="classification_root">Categories</string>
     <string name="picker_arrow"> > </string>
-    <string name="item_picture_folder_count_default">0 Item</string>
-    <string name="item_picture_folder_count_unit">Items</string>
+    <string name="item_picture_folder_count_default">Item : 0 </string>
+    <string name="item_picture_folder_count_unit">Items : %s</string>
     <string name="item_classification_picture">Images</string>
     <string name="item_classification_audio">Audios</string>
     <string name="item_classification_video">Videos</string>

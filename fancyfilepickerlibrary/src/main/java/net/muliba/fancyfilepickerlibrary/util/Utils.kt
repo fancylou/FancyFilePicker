@@ -33,8 +33,14 @@ object Utils {
     fun getMimeTypeFromExtension(extension: String): String =  MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase())
 
     fun formatTime(time: Long): String {
-        val format = SimpleDateFormat("dd MMMM yyyy HH:mm" , Locale.getDefault())
-        return format.format(Date(time))
+        if (Locale.getDefault() == Locale.CHINA || Locale.getDefault() == Locale.CHINESE || Locale.getDefault() == Locale.SIMPLIFIED_CHINESE){
+            val format = SimpleDateFormat("yyyy-MM-dd HH:mm" , Locale.getDefault())
+            return format.format(Date(time))
+        }else {
+            val format = SimpleDateFormat("MMMM d, yyyy HH:mm" , Locale.getDefault())
+            return format.format(Date(time))
+        }
+
     }
 
 

@@ -109,7 +109,7 @@ class FilePickerActivity : AppCompatActivity() {
                     val folderDesc = holder.getView<TextView>(R.id.tv_file_picker_folder_description)
                     doAsync {
                         val size = file.list().size.toString()
-                        uiThread { folderDesc.text = size + getString(R.string.item_folder_description_label) }
+                        uiThread { folderDesc.text = getString(R.string.item_folder_description_label).format(size)  }
                     }
                     holder.convertView.setOnClickListener { refreshList(file.absolutePath) }
                 } else {

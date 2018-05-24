@@ -90,7 +90,7 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
 
             override fun bindPictureFolder(holder: FileViewHolder, folder: DataSource.PictureFolder, position: Int) {
                 holder.setText(R.id.tv_item_classification_picture_folder_name, folder.name)
-                        .setText(R.id.tv_item_classification_picture_folder_count, "" + folder.childrenCount + " " + getString(R.string.item_picture_folder_count_unit))
+                        .setText(R.id.tv_item_classification_picture_folder_count, getString(R.string.item_picture_folder_count_unit).format(folder.childrenCount)  )
                 val icon = holder.getView<ImageView>(R.id.image_item_classification_picture_folder_icon)
                 icon.setImageResource(R.drawable.ic_file_image_48dp)
                 ImageLoader.getInstance(3, ImageLoader.Type.LIFO).loadImage(folder.firstImagePath, icon)
@@ -310,45 +310,45 @@ class FileClassificationPickerActivity : AppCompatActivity(), FileClassification
             }
             0 -> {
                 tv_file_picker_folder_path.text = getString(R.string.classification_root)
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(getString(R.string.item_classification_picture))
                 breadcrumbs.visibility = View.VISIBLE
             }
             1 -> {
                 tv_file_picker_folder_path.text = getString(R.string.classification_root)
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(getString(R.string.item_classification_audio))
                 breadcrumbs.visibility = View.VISIBLE
             }
             2 -> {
                 tv_file_picker_folder_path.text = getString(R.string.classification_root)
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(getString(R.string.item_classification_video))
                 breadcrumbs.visibility = View.VISIBLE
             }
             3 -> {
                 tv_file_picker_folder_path.text = getString(R.string.classification_root)
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(getString(R.string.item_classification_file))
                 breadcrumbs.visibility = View.VISIBLE
             }
             4 -> {
                 tv_file_picker_folder_path.text = getString(R.string.classification_root)
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(getString(R.string.item_classification_archive))
                 breadcrumbs.visibility = View.VISIBLE
             }
             5 -> {
                 tv_file_picker_folder_path.text = getString(R.string.classification_root)
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(getString(R.string.item_classification_application))
                 breadcrumbs.visibility = View.VISIBLE
             }
             6 -> {
                 tv_file_picker_folder_path.text = getString(R.string.classification_root)
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(getString(R.string.item_classification_picture))
-                        .concat(getString(R.string.picker_arrow))
+                        .concat(" "+getString(R.string.picker_arrow)+" ")
                         .concat(mPictureFolderName)
                 breadcrumbs.visibility = View.VISIBLE
             }
