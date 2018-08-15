@@ -17,7 +17,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_file_classification_picker_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent" />
         <android.support.constraint.ConstraintLayout
             android:id="@+id/file_picker_empty"
             android:layout_width="match_parent"

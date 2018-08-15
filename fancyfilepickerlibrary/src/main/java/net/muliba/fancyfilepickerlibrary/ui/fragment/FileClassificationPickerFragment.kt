@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -140,7 +139,7 @@ class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
     private val mPresenter: FileClassficationActivityPresenter by lazy { FileClassficationActivityPresenter() }
     private val mProgressDialog: ProgressDialog by lazy { ProgressDialog(activity) }
 
-    private val mItemDecoration by lazy { TransparentItemDecoration(activity, LinearLayoutManager.VERTICAL) }
+    private val mItemDecoration by lazy { TransparentItemDecoration(activity!!, LinearLayoutManager.VERTICAL) }
     /*状态*/
     private var mLevel = -1 //所处的位置
     private var mPictureFolderName = ""
@@ -154,11 +153,11 @@ class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
         mPresenter.attachView(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_file_classification_picker, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_file_classification_picker, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
         constraint_file_picker_upper_level_button.setOnClickListener { upperLevel() }
@@ -174,7 +173,7 @@ class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
         mPresenter.detachView()
     }
 
-    override fun contextInstance(): Context = activity
+    override fun contextInstance(): Context = activity!!
 
     override fun returnItems(items: ArrayList<DataSource>) {
         mProgressDialog.dismiss()
@@ -187,10 +186,10 @@ class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
         if (mLevel == 3) {
             if (mDocumentTypeFilters.isEmpty()) {
                 image_file_picker_filter_bar.setImageResource(R.drawable.ic_filter_off)
-                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(activity, R.color.secondary_text))
+                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(activity!!, R.color.secondary_text))
             }else {
                 image_file_picker_filter_bar.setImageResource(R.drawable.ic_filter_on)
-                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(activity, R.color.colorPrimary))
+                tv_file_picker_filter_bar.setTextColor(ContextCompat.getColor(activity!!, R.color.colorPrimary))
             }
             layout_file_picker_filter_bar.visibility= View.VISIBLE
 
@@ -315,14 +314,14 @@ class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
 
     private fun showDocumentTypeFilterDialog() {
         val alertTitle = getString(R.string.filter_label)
-        val dialog =  activity.alert(title = alertTitle, message = "") {
+        val dialog =  activity?.alert(title = alertTitle, message = "") {
             customView = LayoutInflater.from(activity).inflate(R.layout.popup_picture_folders,null, false)
             positiveButton(R.string.positive){
                 refreshItems()
             }
             negativeButton(R.string.cancel) {
             }
-        }.show()
+        }?.show()
         val listView = dialog?.findViewById(R.id.id_dir_list) as ListView
         listView.adapter = object : ArrayAdapter<String>(activity, 0, Utils.DOCUMENT_TYPE_LABEL_ARRAY){
             override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -351,7 +350,6 @@ class FileClassificationPickerFragment: Fragment(), FileClassificationUIView {
     }
 
     private fun toggleDocumentType(check: Boolean, value: String) {
-//        Log.i("PICKER", "toggleDocumentType $check, value:$value")
         if (check) {
             mDocumentTypeFilters.add(value)
         }else {

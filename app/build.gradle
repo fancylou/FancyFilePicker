@@ -3,12 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
     defaultConfig {
         applicationId "net.muliba.fancyfilepicker"
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion 19
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
     }
@@ -20,15 +19,6 @@ android {
     }
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
-    }
-}
 
 dependencies {
     implementation  fileTree(include: ['*.jar'], dir: 'libs')
@@ -39,5 +29,5 @@ dependencies {
     implementation  project(':fancyfilepickerlibrary')
 
     implementation  "com.android.support:appcompat-v7:$support_version"
-    implementation  "com.android.support.constraint:constraint-layout:1.0.2"
+    implementation  "com.android.support.constraint:constraint-layout:1.1.2"
 }

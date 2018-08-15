@@ -150,25 +150,25 @@ class PictureLoaderActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks
         super.onDestroy()
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         when (id) {
             PHOTO_LOADER_ID -> {
-                var albumId = args?.getString(ALBUM_ID_KEY) ?: ""
+                val albumId = args?.getString(ALBUM_ID_KEY) ?: ""
                 return createCursorLoader(albumId)
             }
             else -> {
                 Log.e(TAG, "do not recognize onCreateLoader id , id:$id")
-                return null
+                return createCursorLoader(Utils.RECENT_ALBUM_ID)
             }
         }
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>?) {
+    override fun onLoaderReset(loader: Loader<Cursor>) {
         Log.d(TAG, "onLoaderReset ......")
         mAdapter.changeCursor(null)
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>?, cursor: Cursor?) {
+    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
         Log.d(TAG, "onLoadFinished ......")
         mAdapter.changeCursor(cursor)
     }
@@ -187,12 +187,13 @@ class PictureLoaderActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks
         if (mSelected.size == 0) {
             pictureChooseBtn.text = getString(R.string.picker)
         }else {
-            pictureChooseBtn.text = getString(R.string.picker) + "(" + mSelected.size.toString() + ")"
+            pictureChooseBtn.text = getString(R.string.picker) + "(${mSelected.size})"
         }
     }
 
 
-    val ALBUM_ID_KEY = "ALBUM_ID_KEY"
+    private val ALBUM_ID_KEY = "ALBUM_ID_KEY"
+
     private fun loadPhoto() {
         val args = Bundle()
         args.putString(ALBUM_ID_KEY, mCurrentAlbumId)

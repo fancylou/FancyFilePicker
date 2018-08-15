@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         button.setOnClickListener {
-            checkStoragePermission()
+            gotoFilePicker()
         }
         buttonSingle.setOnClickListener {
             gotoSingleFilePicker()
@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
 //                    .requestCode(PICTURE_PICKER_REQUEST_CODE)
 //                    .start()
         }
+
+        checkStoragePermission()
     }
 
 
@@ -127,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                 return
             }
         }
-        gotoFilePicker()
+
     }
 
     private fun gotoFilePicker() {

@@ -40,11 +40,11 @@ class FileLocalStoragePickerFragment: Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater?.inflate(R.layout.fragment_file_picker, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_file_picker, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recycler_file_picker_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recycler_file_picker_list.adapter = adapter
@@ -70,7 +70,7 @@ class FileLocalStoragePickerFragment: Fragment() {
      */
     private fun upperLevel() {
         if (rootPath == currentPath) {
-            activity.toast(getString(R.string.message_already_on_top))
+            activity?.toast(getString(R.string.message_already_on_top))
         } else {
             refreshList(File(currentPath).parentFile.absolutePath)
         }

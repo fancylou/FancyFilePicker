@@ -85,22 +85,33 @@ class ListAlbumPopupWindow(val fragmentActivity: FragmentActivity): PopupWindow(
         screenHeight = (metrics.heightPixels * 0.7).toInt()
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         when (id) {
             ALBUM_LOADER_ID -> {
                 return AlbumCursorLoader(fragmentActivity)
             }
             else -> {
-                return null
+                 val PROJECTION = arrayOf(MediaStore.Images.Media._ID,
+                        MediaStore.Images.Media.DISPLAY_NAME,
+                        MediaStore.Images.Media.DATA,
+                        MediaStore.Images.Media.DATE_TAKEN)
+                 val ORDER_BY = " ${MediaStore.Images.Media.DATE_TAKEN } DESC"
+                 val SELECTION_SIZE =  "${MediaStore.Images.Media.SIZE} > ? or ${MediaStore.Images.Media.SIZE} is null"
+                return CursorLoader(fragmentActivity,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        PROJECTION,
+                        SELECTION_SIZE,
+                        arrayOf("0"),
+                        ORDER_BY)
             }
         }
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>?) {
+    override fun onLoaderReset(loader: Loader<Cursor>) {
         mAdapter.swapCursor(null)
     }
 
-    override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
+    override fun onLoadFinished(loader: Loader<Cursor>, data: Cursor?) {
         mAdapter.swapCursor(data)
     }
 
@@ -117,7 +128,7 @@ class ListAlbumPopupWindow(val fragmentActivity: FragmentActivity): PopupWindow(
      */
     open class AlbumCursorLoader : CursorLoader {
 
-        constructor(context: Context?): super(context,
+        constructor(context: Context): super(context,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 arrayOf(MediaStore.Images.Media.BUCKET_ID,
                         MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
@@ -136,18 +147,20 @@ class ListAlbumPopupWindow(val fragmentActivity: FragmentActivity): PopupWindow(
                     "count(bucket_id) as cou",
                     MediaStore.Images.Media._ID))
             var count = 0L
-            if (albums.count>0) {
-                while (albums.moveToNext()) {
-                    count += albums.getLong(3)
+            if (albums!=null) {
+                if (albums.count > 0) {
+                    while (albums.moveToNext()) {
+                        count += albums.getLong(3)
+                    }
                 }
             }
-
             recentAlbum.addRow(arrayOf(Utils.RECENT_ALBUM_ID,
                     context.getString(R.string.recent_photo),
                     "",//TODO 没有图片
                     "$count",
                     Utils.EMPTY_MEDIA_ID))
             return MergeCursor(arrayOf(recentAlbum, albums))
+
         }
     }
 

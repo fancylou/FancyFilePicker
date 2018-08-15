@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">FancyFilePickerLibrary</string>
     <string name="title_activity_file_picker">文件选择器</string>
     <string name="title_activity_image_picker">图片选择器</string>
     <string name="tab_classification">分类</string>

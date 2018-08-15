@@ -1,5 +1,6 @@
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'org.jetbrains.dokka'
 
 // load properties
 Properties properties = new Properties()
@@ -64,41 +65,18 @@ install {
 
 version = projectVersionName
 
-// 命令 java -Djava.ext.dirs=. -jar dokka-fatjar.jar ./src/main/java -format javadoc -output ./build/doc
 
-task dokkaJavadoc(type: org.gradle.api.tasks.Exec) {
-    workingDir '.'
-    println "WorkingDir: $workingDir"
-    ext.toolJarPath = "$workingDir"
-    ext.dokkaJarPath = "$workingDir"+File.separator+"dokka-fatjar.jar"
-    ext.sourceDirs = "$workingDir"+File.separator+"src"+File.separator+"main"+File.separator+"java"
-    ext.outputFormat = 'javadoc'
-    ext.outputDirectory = "$buildDir" + File.separator+ "doc"
-
-    /**
-     *
-     * 这里输出格式可以为: html , markdown, jekyll, javadoc
-     * 如果是 javadoc 格式, 他会用到 javadoc 的库,
-     * 如果你的 PATH 没有包含 JDK x.x.x/lib 路径的话, 就会报 'java.lang.ClassNotFoundException: com.sun.javadoc.DocErrorReporter' 异常
-     * 所以需要你主动将这个路径加进来, 或者将 JDK x.x.x/lib/tools.jar 文件拷贝出来, 下面这个命令我就是拷贝到了当前目录
-     *
-     * dokka-fatjar.jar 这个jar就是从 dokka 项目上下载下来的
-     */
-    commandLine "cmd" , "/c", "java -Djava.ext.dirs=$toolJarPath -jar $dokkaJarPath $sourceDirs -format $outputFormat -output $outputDirectory"
-
-    /**
-     * 如果你是 Linux 系统, 就用这个
-     */
-//    commandLine "java -Djava.ext.dirs=$toolJarPath -jar $dokkaJarPath $sourceDirs -format $outputFormat -output $outputDirectory"
-
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
 }
 
 /**
  * 这里将生成的文档打包成 xxxx-javadoc.jar
  */
-task kotlinDocJar(type: Jar, dependsOn: dokkaJavadoc) {
+task kotlinDocJar(type: Jar, dependsOn: dokka) {
     classifier = 'javadoc'
-    from dokkaJavadoc.outputDirectory
+    from dokka.outputDirectory
 }
 
 /**

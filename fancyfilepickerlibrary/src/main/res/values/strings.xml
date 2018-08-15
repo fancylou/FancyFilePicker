@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">FancyFilePickerLibrary</string>
     <string name="title_activity_file_picker">FilePicker</string>
     <string name="title_activity_image_picker">ImagePicker</string>
     <string name="tab_classification">Categories</string>
