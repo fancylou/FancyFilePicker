@@ -2,6 +2,8 @@ package net.muliba.fancyfilepickerlibrary
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
+import com.wugang.activityresult.library.ActivityResult
 import net.muliba.fancyfilepickerlibrary.ui.FileActivity
 import net.muliba.fancyfilepickerlibrary.util.Utils
 
@@ -47,6 +49,7 @@ class FilePicker {
      * 定义requestCode
      * @param requestCode
      */
+    @Deprecated(message = "4.0.0开始不再使用，用forResult直接返回结果，不需要onActivityResult接收结果")
     fun requestCode(requestCode: Int): FilePicker {
         this.requestCode = requestCode
         return this
@@ -54,7 +57,7 @@ class FilePicker {
 
     fun existingResults(results:ArrayList<String>): FilePicker {
         this.existingResults.clear()
-        if (!results.isEmpty()) {
+        if (results.isNotEmpty()) {
             this.existingResults.addAll(results)
         }
         return this
@@ -63,6 +66,7 @@ class FilePicker {
     /**
      * 启动选择器
      */
+    @Deprecated(message = "4.0.0开始不再使用，用forResult直接返回结果，不需要onActivityResult接收结果")
     fun start() {
         if (activity==null) {
             throw RuntimeException("not found Activity, Please execute the function 'withActivity' ")
@@ -70,10 +74,48 @@ class FilePicker {
         startFilePicker()
     }
 
+    /**
+     * 4.0.0 新增
+     * 返回选择的结果 如果是单选 result[0]获取
+     * 不再需要到onActivityResult中去接收结果
+     */
+    fun forResult(listener: (filePaths: List<String>) -> Unit) {
+        if (activity==null) {
+            throw RuntimeException("not found Activity, Please execute the function 'withActivity' ")
+        }
+        val bundle = Bundle()
+        bundle.putInt(Utils.CHOOSE_TYPE_KEY, chooseType)
+        bundle.putStringArrayList(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY, existingResults)
+        ActivityResult.of(activity!!)
+                .className(FileActivity::class.java)
+                .params(bundle)
+                .greenChannel()
+                .forResult { resultCode, data ->
+                    val result = ArrayList<String>()
+                    if (resultCode == Activity.RESULT_OK) {
+                        if (chooseType == CHOOSE_TYPE_SINGLE) {
+                            val filePath = data?.getStringExtra(FANCY_FILE_PICKER_SINGLE_RESULT_KEY) ?: ""
+                            if (filePath.isNotEmpty()) {
+                                result.add(filePath)
+                            }
+                        }else {
+                            val array = data?.getStringArrayListExtra(FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY)
+                            if (array !=null && array.isNotEmpty()) {
+                                result.addAll(array)
+                            }
+                        }
+                    }
+                    listener(result)
+                }
+    }
+
+
+
     private fun startFilePicker() {
         val intent = Intent(activity, FileActivity::class.java)
         intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)
         intent.putExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY, existingResults)
         activity?.startActivityForResult(intent, requestCode)
     }
+
 }

@@ -1,6 +1,5 @@
 package net.muliba.fancyfilepicker;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,10 +8,14 @@ import android.widget.TextView;
 
 import net.muliba.fancyfilepickerlibrary.FilePicker;
 
+import java.util.List;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+
 public class JavaMainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
-    private static final  int FILE_PICKER_SINGLE = 1024;
     private Button classificationModeBtn;
     private TextView contentShowTv;
 
@@ -34,25 +37,18 @@ public class JavaMainActivity extends AppCompatActivity implements View.OnClickL
             case  R.id.btn_java_main_classification_mode : {
                 new FilePicker().withActivity(this)
                         .chooseType(FilePicker.CHOOSE_TYPE_SINGLE())
-                        .requestCode(FILE_PICKER_SINGLE)
-                        .start();
+                        .forResult(new Function1<List<String>, Unit>() {
+                            @Override
+                            public Unit invoke(List<String> strings) {
+                                if (!strings.isEmpty()) {
+                                    contentShowTv.setText(strings.get(0));
+                                }
+                                return Unit.INSTANCE;
+                            }
+                        });
                 break;
             }
         }
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case FILE_PICKER_SINGLE: {
-                    String result = data.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY());
-                    contentShowTv.setText(result);
-                    break;
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 }

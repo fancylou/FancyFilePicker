@@ -3,7 +3,9 @@ package net.muliba.fancyfilepickerlibrary
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
+import android.os.Bundle
 import android.support.annotation.ColorInt
+import com.wugang.activityresult.library.ActivityResult
 import net.muliba.fancyfilepickerlibrary.ui.PictureLoaderActivity
 import net.muliba.fancyfilepickerlibrary.util.Utils
 
@@ -47,6 +49,7 @@ class PicturePicker {
      * 定义requestCode
      * @param requestCode
      */
+    @Deprecated(message = "4.0.0开始不再使用，用forResult直接返回结果，不需要onActivityResult接收结果")
     fun requestCode(requestCode: Int): PicturePicker {
         this.requestCode = requestCode
         return this
@@ -81,6 +84,7 @@ class PicturePicker {
     /**
      * 启动选择器
      */
+    @Deprecated(message = "4.0.0开始不再使用，用forResult直接返回结果，不需要onActivityResult接收结果")
     fun start() {
         if (activity == null) {
             throw RuntimeException("not found Activity, Please execute the function 'withActivity' ")
@@ -91,5 +95,42 @@ class PicturePicker {
         intent.putExtra(Utils.CHOOSE_TYPE_KEY, chooseType)
         intent.putExtra(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY, existingResults)
         activity?.startActivityForResult(intent, requestCode)
+    }
+
+    /**
+     * 4.0.0 新增
+     * 返回选择的结果 如果是单选 result[0]获取
+     * 不再需要到onActivityResult中去接收结果
+     */
+    fun forResult(listener: (filePaths: List<String>) -> Unit) {
+        if (activity == null) {
+            throw RuntimeException("not found Activity, Please execute the function 'withActivity' ")
+        }
+        val bundle = Bundle()
+        bundle.putInt(Utils.ACTION_BAR_BACKGROUND_COLOR_KEY, actionBarColor)
+        bundle.putString(Utils.ACTION_BAR_TITLE_KEY, actionBarTitle)
+        bundle.putInt(Utils.CHOOSE_TYPE_KEY, chooseType)
+        bundle.putStringArrayList(Utils.MULIT_CHOOSE_BACK_RESULTS_KEY, existingResults)
+        ActivityResult.of(activity!!)
+                .className(PictureLoaderActivity::class.java)
+                .params(bundle)
+                .greenChannel()
+                .forResult { resultCode, data ->
+                    val result = ArrayList<String>()
+                    if (resultCode == Activity.RESULT_OK) {
+                        if (chooseType == CHOOSE_TYPE_SINGLE) {
+                            val single = data?.getStringExtra(FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY)
+                            if (single!=null && single.isNotEmpty()) {
+                                result.add(single)
+                            }
+                        }else {
+                            val array = data?.getStringArrayListExtra(FANCY_PICTURE_PICKER_ARRAY_LIST_RESULT_KEY)
+                            if (array!=null && array.isNotEmpty()) {
+                                result.addAll(array)
+                            }
+                        }
+                    }
+                    listener(result)
+                }
     }
 }

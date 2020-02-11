@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 17
-        versionName "3.0.2"
+        versionName "4.0.0"
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -31,6 +31,8 @@ dependencies {
     implementation  "com.android.support:design:$support_version"
     implementation  "com.android.support:recyclerview-v7:$support_version"
     implementation  "com.android.support.constraint:constraint-layout:1.1.2"
+    //链式方式获取Activity返回结果
+    implementation 'com.github.lwugang:ActivityResult:59b23e3682'
 }
 
 apply from: "../bintrayUpload.gradle"

@@ -1,7 +1,6 @@
 package net.muliba.fancyfilepicker
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -11,16 +10,11 @@ import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.muliba.fancyfilepickerlibrary.PicturePicker
-import net.muliba.fancyfilepickerlibrary.ui.PictureLoaderActivity
 import org.jetbrains.anko.toast
 
 
 class MainActivity : AppCompatActivity() {
 
-    val FILE_PICKER_REQUEST_CODE = 1111
-    val FILE_PICKER_SINGLE_REQUEST_CODE = 2222
-    val PICTURE_PICKER_REQUEST_CODE = 1100
-    val PICTURE_PICKER_SINGLE_REQUEST_CODE = 2200
     val REQUEST_CODE_ASK_PERMISSIONS = 120
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,13 +31,20 @@ class MainActivity : AppCompatActivity() {
         buttonClip.setOnClickListener {
             PicturePicker().withActivity(this)
                     .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                    .requestCode(PICTURE_PICKER_SINGLE_REQUEST_CODE)
-                    .start()
+                    .forResult { filePaths ->
+                        if (filePaths.isNotEmpty()) {
+                            textView.text = filePaths[0]
+                        }
+                    }
         }
         buttonMultiChoose.setOnClickListener {
             PicturePicker().withActivity(this)
-                    .requestCode(PICTURE_PICKER_REQUEST_CODE)
-                    .start()
+                    .actionBarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                    .forResult { filePaths ->
+                        val buffer = StringBuffer()
+                        filePaths.map { buffer.append(it).append(" ; ") }
+                        textView.text = buffer.toString()
+                    }
         }
         buttonJavaMain.setOnClickListener {
             val intent = Intent(this@MainActivity, JavaMainActivity::class.java)
@@ -54,52 +55,17 @@ class MainActivity : AppCompatActivity() {
                     .chooseType(FilePicker.CHOOSE_TYPE_MULTIPLE)
                     .existingResults(arrayListOf("/storage/emulated/0/DCIM/Camera/IMG_20170805_143117.jpg","/storage/emulated/0/DCIM/Camera/IMG_20170805_142052.jpg",
                             "/storage/emulated/0/DCIM/Camera/VID_20170805_200227.mp4"))
-                    .requestCode(FILE_PICKER_REQUEST_CODE)
-                    .start()
-//            PicturePicker().withActivity(this)
-//                    .chooseType(PicturePicker.CHOOSE_TYPE_MULTIPLE)
-//                    .existingResults(arrayListOf("/storage/emulated/0/DCIM/Camera/IMG_20170805_143117.jpg","/storage/emulated/0/DCIM/Camera/IMG_20170805_142052.jpg"))
-//                    .requestCode(PICTURE_PICKER_REQUEST_CODE)
-//                    .start()
+                    .forResult { filePaths ->
+                        val buffer = StringBuffer()
+                        filePaths.map { buffer.append(it).append(" ; ") }
+                        textView.text = buffer.toString()
+                    }
         }
 
         checkStoragePermission()
     }
 
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                FILE_PICKER_REQUEST_CODE -> {
-                    val buffer = StringBuffer()
-                    val array = data?.getStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY)
-                    array?.map { buffer.append(it).append(" ; ") }
-                    textView.text = buffer.toString()
-                    return
-                }
-                FILE_PICKER_SINGLE_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    textView.text = result
-                    return
-                }
-                PICTURE_PICKER_REQUEST_CODE ->{
-                    val buffer = StringBuffer()
-                    val array = data?.getStringArrayListExtra(PicturePicker.FANCY_PICTURE_PICKER_ARRAY_LIST_RESULT_KEY)
-                    array?.map { buffer.append(it).append(" ; ") }
-                    textView.text = buffer.toString()
-                    return
-                }
-                PICTURE_PICKER_SINGLE_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY)
-                    textView.text = result
-                    return
-                }
-
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
@@ -135,16 +101,23 @@ class MainActivity : AppCompatActivity() {
     private fun gotoFilePicker() {
         FilePicker()
                 .withActivity(this)
-                .requestCode(FILE_PICKER_REQUEST_CODE)
-                .start()
+                .forResult { filePaths ->
+                    val buffer = StringBuffer()
+                    filePaths.map { buffer.append(it).append(" ; ") }
+                    textView.text = buffer.toString()
+                }
+
     }
 
     private fun gotoSingleFilePicker() {
         FilePicker()
                 .withActivity(this)
-                .requestCode(FILE_PICKER_SINGLE_REQUEST_CODE)
                 .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                .start()
+                .forResult { filePaths ->
+                    if (filePaths.isNotEmpty()) {
+                        textView.text = filePaths[0]
+                    }
+                }
     }
 
     /**
