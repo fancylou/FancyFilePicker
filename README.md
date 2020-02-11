@@ -1,5 +1,5 @@
 # FancyFilePicker
-[![](https://jitpack.io/v/fancylou/FancyFilePicker.svg)](https://jitpack.io/#fancylou/FancyFilePicker/v3.0.0)
+[![](https://jitpack.io/v/fancylou/FancyFilePicker.svg)](https://jitpack.io/#fancylou/FancyFilePicker/v4.0.0)
 
 使用Kotlin写的一个Android文件选择器，轻便，漂亮，尽量遵循Material Design
 
@@ -19,74 +19,55 @@
 
 ```groovy
 dependencies {
-	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:3.0.0'
+	compile 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:4.0.0'
 }
 ```
 
 ### Kotlin中使用
 
-```kotlin
-FilePicker()
-        .withActivity(this)
-        .requestCode(0)
-        .start()
-```
-
-接收结果:
-
-```kotlin
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (resultCode == Activity.RESULT_OK) {
-        if (requestCode == 0) {
-            val array = data?.getStringArrayListExtra(FilePicker.FANCY_FILE_PICKER_ARRAY_LIST_RESULT_KEY)
-            ...
-            return
-        }
-    }
-    super.onActivityResult(requestCode, resultCode, data)
-}
-```
-
-单选：
+多选：
 
 ```kotlin
 FilePicker()
-	.withActivity(this)
-    .requestCode(0)
-    .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-    .start()
+    .withActivity(this)
+    .forResult { filePaths ->
+                 ...
+               }
 ```
 
-接收结果：
+ 单选：
 
 ```kotlin
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (resultCode == Activity.RESULT_OK) {
-        if (requestCode == 0) {
-           val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-            ...
-            return
-        }
-    }
-    super.onActivityResult(requestCode, resultCode, data)
-}
+FilePicker()
+    .withActivity(this)
+		.chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
+    .forResult { filePaths ->
+                 ...
+               }
 ```
+
 
 
 ### JAVA中使用
 
 ```java
-new FilePicker().withActivity(this)
-                .requestCode(0)
-                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE())
-                .start();
+new FilePicker()
+  	.withActivity(this)
+    .chooseType(FilePicker.CHOOSE_TYPE_SINGLE())
+    .forResult(new Function1<List<String>, Unit>() {
+      @Override
+      public Unit invoke(List<String> strings) {
+        ...
+          return Unit.INSTANCE;
+      }
+    });
 ```
 
 还有别忘了添加权限：
 
 ```xml
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 ```
 
 
